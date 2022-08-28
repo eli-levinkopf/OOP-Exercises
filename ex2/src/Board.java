@@ -96,6 +96,7 @@ public class Board {
                 return;
             }
         }
+
 //      check anti-diagonal
         countOfCellsToWin = 0;
         int antiDiagonalOffset = Math.abs(row + col - (SIZE - 1));

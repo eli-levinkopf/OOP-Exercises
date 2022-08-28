@@ -1,5 +1,4 @@
 public class Game {
-
     private final Renderer renderer;
     private final Player playerX;
     private final Player playerO;
