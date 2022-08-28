@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 
 class Renderer {
-	private static final int ROWS_PER_MARK = 3;
+	private static final int ROWS_PER_MARK = 3; 
 	private static final int COLS_PER_MARK = 9;
 	private static final char DEFAULT_CHAR = ' ';
 	private static final char HORIZONTAL_LINE_CHAR = '-';
