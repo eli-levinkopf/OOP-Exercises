@@ -50,11 +50,10 @@ public class Board {
         }
     }
 
-    private void checkWinner(Cell.Mark mark, int row, int col) {
-//      check col
+    private boolean checkWinnerForRowsAndCols(Cell.Mark mark, int row, int col, boolean flagForRow) {
         int countOfCellsToWin = 0;
         for (int i = 0; i < SIZE; i++) {
-            if (board[row][i] != mark) {
+            if ((flagForRow && board[row][i] != mark) || (!flagForRow && board[i][col] != mark)) {
                 countOfCellsToWin = 0;
                 continue;
             }
@@ -62,25 +61,23 @@ public class Board {
             if (countOfCellsToWin == WIN_STREAK) {
                 winner = mark;
                 gameEnded = true;
-                return;
+                return true;
             }
+        }
+        return false;
+    }
+
+    private void checkWinner(Cell.Mark mark, int row, int col) {
+//      check col
+        if (checkWinnerForRowsAndCols(mark, row, col, true)) {
+            return;
         }
 //      check row
-        countOfCellsToWin = 0;
-        for (int i = 0; i < SIZE; i++) {
-            if (board[i][col] != mark) {
-                countOfCellsToWin = 0;
-                continue;
-            }
-            countOfCellsToWin++;
-            if (countOfCellsToWin == WIN_STREAK) {
-                winner = mark;
-                gameEnded = true;
-                return;
-            }
+        if (checkWinnerForRowsAndCols(mark, row, col, false)) {
+            return;
         }
 //      check diagonal
-        countOfCellsToWin = 0;
+        int countOfCellsToWin = 0;
         int diagonalOffset = Math.abs(row - col);
         int diagonalSize = SIZE - diagonalOffset;
         for (int i = 0; i < diagonalSize && diagonalSize >= WIN_STREAK; i++) {
@@ -96,7 +93,6 @@ public class Board {
                 return;
             }
         }
-
 //      check anti-diagonal
         countOfCellsToWin = 0;
         int antiDiagonalOffset = Math.abs(row + col - (SIZE - 1));
