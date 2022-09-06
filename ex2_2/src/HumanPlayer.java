@@ -2,9 +2,9 @@ import java.util.Scanner;
 
 public class HumanPlayer implements Player{
     private static final Scanner scanner = new Scanner(System.in);
-    public HumanPlayer(){}
 
-    public void playTurn(Board board, Cell.Mark mark) {
+    @Override
+    public void playTurn(Board board, Mark mark) {
         int num;
         System.out.print("Please enter coordinates: ");
         getNumber();

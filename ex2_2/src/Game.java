@@ -3,20 +3,20 @@ public class Game {
     private final Player playerX;
     private final Player playerO;
 
-    public Game(Player playerX, Player playerO, Renderer renderer){
+    public Game(Player playerX, Player playerO, Renderer renderer) {
         this.renderer = renderer;
         this.playerX = playerX;
-        this. playerO = playerO;
+        this.playerO = playerO;
     }
 
-    public Cell.Mark run(){
+    public Mark run() {
         Board board = new Board();
         Player[] players = {playerX, playerO};
-        Cell.Mark[] marks = {Cell.Mark.X, Cell.Mark.O};
+        Mark[] marks = {Mark.X, Mark.O};
         int turn = 0;
-        while(!board.gameEnded()){
+        while (!board.gameEnded()) {
             renderer.renderBoard(board);
-            players[turn%2].playTurn(board, marks[turn%2]);
+            players[turn % 2].playTurn(board, marks[turn % 2]);
             turn++;
 //            renderer.renderBoard(board);
         }

@@ -22,17 +22,17 @@ class ConsoleRenderer implements Renderer{
 	private static final int BUFFER_ROWS = Board.SIZE * ROWS_PER_MARK + (Board.SIZE-1) + NUM_ROWS_BEFORE_BOARD;
 	private static final int BUFFER_COLS = Board.SIZE * COLS_PER_MARK + (Board.SIZE-1) + NUM_COLS_BEFORE_BOARD;
 
-	private static final Map<Cell.Mark, String[]> MARKS_DRAWINGS = Map.of(
+	private static final Map<Mark, String[]> MARKS_DRAWINGS = Map.of(
 
-			Cell.Mark.X, new String[] { 		"  X   X  ",
+			Mark.X, new String[] { 		"  X   X  ",
 					"    X    ",
 					"  X   X  "      },
 
-			Cell.Mark.O, new String[] { 		"   OOO   ",
+			Mark.O, new String[] { 		"   OOO   ",
 					"  O   O  ",
 					"   OOO   "      },
 
-			Cell.Mark.BLANK, new String[] { 	"         ",
+			Mark.BLANK, new String[] { 	"         ",
 					"         ",
 					"         "      }
 	);
@@ -82,6 +82,7 @@ class ConsoleRenderer implements Renderer{
 	 * Prints the supplied board to the console.
 	 * @param board the board to print.
 	 */
+	@Override
 	public void renderBoard(Board board) {
 		for(int i = 0 ; i < Board.SIZE ; i++) {
 			for(int j = 0 ; j < Board.SIZE ; j++) {
@@ -98,7 +99,7 @@ class ConsoleRenderer implements Renderer{
 		System.out.println();
 	}
 
-	private void drawMarkInBuffer(int rowStart, int colStart, Cell.Mark mark) {
+	private void drawMarkInBuffer(int rowStart, int colStart, Mark mark) {
 		String[] markLines = MARKS_DRAWINGS.get(mark);
 		for(int i = 0 ; i < markLines.length ; i++) {
 			for(int j = 0 ; j < markLines[i].length() ; j++) {
