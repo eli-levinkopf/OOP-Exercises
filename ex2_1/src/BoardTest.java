@@ -20,7 +20,7 @@ public class BoardTest {
 		board = new Board();
 		for (int row = 0; row < Board.SIZE; row++) {
 			for (int col = 0; col < Board.SIZE; col++) {
-				assertEquals(Cell.Mark.BLANK, board.getMark(row, col));
+				assertEquals(Mark.BLANK, board.getMark(row, col));
 			}
 		}
 	}
@@ -31,7 +31,7 @@ public class BoardTest {
 	@Test
 	void checkPutMarkAndGetMarkSynchronization() {
 		board = new Board();
-		Cell.Mark[] marks = {Cell.Mark.X, Cell.Mark.O};
+		Mark[] marks = {Mark.X, Mark.O};
 		for (int row = 0; row < Board.SIZE; row++) {
 			for (int col = 0; col < Board.SIZE; col++) {
 				board.putMark(marks[(row + 3 * col) % 2], row, col);
@@ -50,14 +50,14 @@ public class BoardTest {
 	@Test
 	void checkMarksCanNotChange() {
 		board = new Board();
-		assertTrue(board.putMark(Cell.Mark.X, 1, 0));
-		assertFalse(board.putMark(Cell.Mark.X, 1, 0));
-		assertFalse(board.putMark(Cell.Mark.O, 1, 0));
-		assertEquals(Cell.Mark.X, board.getMark(1, 0));
-		assertTrue(board.putMark(Cell.Mark.O, 0, 1));
-		assertFalse(board.putMark(Cell.Mark.O, 0, 1));
-		assertFalse(board.putMark(Cell.Mark.X, 0, 1));
-		assertEquals(Cell.Mark.O, board.getMark(0, 1));
+		assertTrue(board.putMark(Mark.X, 1, 0));
+		assertFalse(board.putMark(Mark.X, 1, 0));
+		assertFalse(board.putMark(Mark.O, 1, 0));
+		assertEquals(Mark.X, board.getMark(1, 0));
+		assertTrue(board.putMark(Mark.O, 0, 1));
+		assertFalse(board.putMark(Mark.O, 0, 1));
+		assertFalse(board.putMark(Mark.X, 0, 1));
+		assertEquals(Mark.O, board.getMark(0, 1));
 	}
 
 	/**
@@ -65,11 +65,11 @@ public class BoardTest {
 	 */
 	@Test
 	void checkPutAndGetMarkOutOfRange() {
-		checkPutMarkOutOfRangeWithMark(Cell.Mark.X);
-		checkPutMarkOutOfRangeWithMark(Cell.Mark.O);
+		checkPutMarkOutOfRangeWithMark(Mark.X);
+		checkPutMarkOutOfRangeWithMark(Mark.O);
 	}
 
-	private void checkPutMarkOutOfRangeWithMark(Cell.Mark mark) {
+	private void checkPutMarkOutOfRangeWithMark(Mark mark) {
 		board = new Board();
 		assertFalse(board.putMark(mark, -1, 0));
 		assertFalse(board.putMark(mark, -2, 0));
@@ -84,18 +84,18 @@ public class BoardTest {
 		assertFalse(board.putMark(mark, -1, Board.SIZE));
 		assertFalse(board.putMark(mark, Board.SIZE, -1));
 
-		assertEquals(Cell.Mark.BLANK, board.getMark(-1, 0));
-		assertEquals(Cell.Mark.BLANK, board.getMark(-2, 0));
-		assertEquals(Cell.Mark.BLANK, board.getMark(0, -1));
-		assertEquals(Cell.Mark.BLANK, board.getMark(0, -2));
-		assertEquals(Cell.Mark.BLANK, board.getMark(-1, -1));
-		assertEquals(Cell.Mark.BLANK, board.getMark(Board.SIZE, 0));
-		assertEquals(Cell.Mark.BLANK, board.getMark(Board.SIZE + 1, 0));
-		assertEquals(Cell.Mark.BLANK, board.getMark(0, Board.SIZE));
-		assertEquals(Cell.Mark.BLANK, board.getMark(0, Board.SIZE + 1));
-		assertEquals(Cell.Mark.BLANK, board.getMark(Board.SIZE, Board.SIZE));
-		assertEquals(Cell.Mark.BLANK, board.getMark(-1, Board.SIZE));
-		assertEquals(Cell.Mark.BLANK, board.getMark(Board.SIZE, -1));
+		assertEquals(Mark.BLANK, board.getMark(-1, 0));
+		assertEquals(Mark.BLANK, board.getMark(-2, 0));
+		assertEquals(Mark.BLANK, board.getMark(0, -1));
+		assertEquals(Mark.BLANK, board.getMark(0, -2));
+		assertEquals(Mark.BLANK, board.getMark(-1, -1));
+		assertEquals(Mark.BLANK, board.getMark(Board.SIZE, 0));
+		assertEquals(Mark.BLANK, board.getMark(Board.SIZE + 1, 0));
+		assertEquals(Mark.BLANK, board.getMark(0, Board.SIZE));
+		assertEquals(Mark.BLANK, board.getMark(0, Board.SIZE + 1));
+		assertEquals(Mark.BLANK, board.getMark(Board.SIZE, Board.SIZE));
+		assertEquals(Mark.BLANK, board.getMark(-1, Board.SIZE));
+		assertEquals(Mark.BLANK, board.getMark(Board.SIZE, -1));
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class BoardTest {
 	 */
 	@Test
 	void checkXWin() {
-		checkWin(Cell.Mark.X);
+		checkWin(Mark.X);
 	}
 
 	/**
@@ -120,10 +120,10 @@ public class BoardTest {
 	 */
 	@Test
 	void checkOWin() {
-		checkWin(Cell.Mark.O);
+		checkWin(Mark.O);
 	}
 
-	void checkWin(Cell.Mark mark) {
+	void checkWin(Mark mark) {
 		// scenario 1: horizontal
 		board = new Board();
 		for (int i = 0; i < Board.WIN_STREAK; i++) {
@@ -171,12 +171,12 @@ public class BoardTest {
 			fail("Can't achieve a draw with a win streak smaller than 3.");
 			return;
 		}
-		Cell.Mark[] marks = {Cell.Mark.X, Cell.Mark.X, Cell.Mark.O, Cell.Mark.O};
+		Mark[] marks = {Mark.X, Mark.X, Mark.O, Mark.O};
 		for (int row = 0; row < Board.SIZE; row++) {
 			for (int col = 0; col < Board.SIZE; col++) {
 				board.putMark(marks[(2 * row + col) % 4], row, col);
 				if ((row == Board.SIZE - 1) && (col == Board.SIZE - 1)) {
-					assertEquals(Cell.Mark.BLANK, board.getWinner(),
+					assertEquals(Mark.BLANK, board.getWinner(),
 							"Board filled without a win but did not indicate a draw.");
 					return;
 				}

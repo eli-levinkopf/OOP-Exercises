@@ -9,10 +9,10 @@ public class Game {
         this. playerO = playerO;
     }
 
-    private Cell.Mark run(){
+    private Mark run(){
         Board board = new Board();
         Player[] players = {playerX, playerO};
-        Cell.Mark[] marks = {Cell.Mark.X, Cell.Mark.O};
+        Mark[] marks = {Mark.X, Mark.O};
         int turn = 0;
         while(!board.gameEnded()){
             renderer.renderBoard(board);
@@ -28,7 +28,7 @@ public class Game {
         Renderer renderer = new Renderer();
         Player playerO = new Player(), playerX = new Player();
         Game game = new Game(playerO, playerX, renderer);
-        Cell.Mark winner = game.run();
+        Mark winner = game.run();
         System.out.println("The winner is: " + winner);
     }
 }

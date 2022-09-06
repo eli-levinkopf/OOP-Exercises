@@ -2,20 +2,20 @@ public class Board {
     public static final int SIZE = 4;
     public static final int WIN_STREAK = 3;
     private boolean gameEnded = false;
-    private Cell.Mark winner = Cell.Mark.BLANK;
-    private final Cell.Mark[][] board = new Cell.Mark[SIZE][SIZE];
+    private Mark winner = Mark.BLANK;
+    private final Mark[][] board = new Mark[SIZE][SIZE];
     private int numOfEmptyCells = SIZE * SIZE;
 
     public Board() {
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
-                board[row][col] = Cell.Mark.BLANK;
+                board[row][col] = Mark.BLANK;
             }
         }
     }
 
-    public boolean putMark(Cell.Mark mark, int row, int col) {
-        if (row >= SIZE || row < 0 || col >= SIZE || col < 0 || board[row][col] != Cell.Mark.BLANK) {
+    public boolean putMark(Mark mark, int row, int col) {
+        if (row >= SIZE || row < 0 || col >= SIZE || col < 0 || board[row][col] != Mark.BLANK) {
             return false;
         }
         board[row][col] = mark;
@@ -24,9 +24,9 @@ public class Board {
         return true;
     }
 
-    public Cell.Mark getMark(int row, int col) {
+    public Mark getMark(int row, int col) {
         if (row >= SIZE || row < 0 || col >= SIZE || col < 0) {
-            return Cell.Mark.BLANK;
+            return Mark.BLANK;
         }
         return board[row][col];
     }
@@ -35,12 +35,12 @@ public class Board {
         return gameEnded;
     }
 
-    public Cell.Mark getWinner() {
+    public Mark getWinner() {
         return winner;
     }
 
-    private void updateNumOfEmptyCells(Cell.Mark mark) {
-        if (mark != Cell.Mark.BLANK) {
+    private void updateNumOfEmptyCells(Mark mark) {
+        if (mark != Mark.BLANK) {
             numOfEmptyCells--;
         } else {
             numOfEmptyCells++;
@@ -50,7 +50,7 @@ public class Board {
         }
     }
 
-    private boolean checkWinnerForRowsAndCols(Cell.Mark mark, int row, int col, boolean flagForRow) {
+    private boolean checkWinnerForRowsAndCols(Mark mark, int row, int col, boolean flagForRow) {
         int countOfCellsToWin = 0;
         for (int i = 0; i < SIZE; i++) {
             if ((flagForRow && board[row][i] != mark) || (!flagForRow && board[i][col] != mark)) {
@@ -67,7 +67,7 @@ public class Board {
         return false;
     }
 
-    private void checkWinner(Cell.Mark mark, int row, int col) {
+    private void checkWinner(Mark mark, int row, int col) {
 //      check col
         if (checkWinnerForRowsAndCols(mark, row, col, true)) {
             return;

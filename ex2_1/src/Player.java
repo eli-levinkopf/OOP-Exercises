@@ -4,7 +4,7 @@ public class Player {
     private static final Scanner scanner = new Scanner(System.in);
     public Player(){}
 
-    public void playTurn(Board board, Cell.Mark mark) {
+    public void playTurn(Board board, Mark mark) {
         int num;
         System.out.print("Please enter coordinates: ");
         getNumber();
