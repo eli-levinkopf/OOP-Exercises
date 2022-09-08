@@ -1,9 +1,9 @@
 import java.util.Random;
 
 public class WhateverPlayer implements Player {
-    private static final int ROW = 0;
-    private static final int COL = 1;
-    private static final Random rand = new Random();
+    private final int ROW = 0;
+    private final int COL = 1;
+    private final Random rand = new Random();
 
     @Override
     public void playTurn(Board board, Mark mark) {

@@ -1,13 +1,13 @@
 public class SnartypamtsPlayer implements Player {
-    private static int lastRow = 0;
-    private static int lastCol = 0;
-    private static boolean playInRows = true;
-    private static boolean playInCols = true;
-    private static boolean playInDiag = true;
-    private static Mark lastMark;
-    private static boolean firstCell = true;
-    private static int idxForLastCell = 0;
-    private static final WhateverPlayer WhateverPlayer = new WhateverPlayer();
+    private int lastRow = 0;
+    private int lastCol = 0;
+    private boolean playInRows = true;
+    private boolean playInCols = true;
+    private boolean playInDiag = true;
+    private Mark lastMark;
+    private boolean firstCell = true;
+    private int idxForLastCell = 0;
+    private final WhateverPlayer WhateverPlayer = new WhateverPlayer();
 
     @Override
     public void playTurn(Board board, Mark mark) {
