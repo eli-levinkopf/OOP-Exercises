@@ -1,6 +1,6 @@
 package bricker.main;
 
-import bricker.brick_strategies.CollisionStrategy;
+import bricker.brick_strategies.BrickStrategyFactory;
 import bricker.gameobjects.*;
 import danogl.GameManager;
 import danogl.GameObject;
@@ -17,7 +17,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class BrickerGameManager extends GameManager {
-    private static final float BALL_SPEED = 150f;
+    public static final float BALL_SPEED = 150f;
     private static final int FRAME_THICKNESS = 15;
     private static final int BRICK_THICKNESS = 15;
     private static final int WIDGET_DIMENSION = 20;
@@ -27,7 +27,7 @@ public class BrickerGameManager extends GameManager {
     private static final int SPACE_BETWEEN_BRICKS = 1;
     private static final int NUM_OF_LIFE = 3;
     private static final int LIFE_WIDGETS_LAYER = -1;
-    private static final float BALL_DIMENSION = 20;
+    public static final float BALL_DIMENSION = 20;
     private static final float PADDLE_DIMENSION_Y = 15;
     private static final float PADDLE_DIMENSION_X = 100;
     private static final float WINDOW_DIMENSION_X = 700;
@@ -58,15 +58,17 @@ public class BrickerGameManager extends GameManager {
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
+        BrickStrategyFactory brickStrategyFactory = new BrickStrategyFactory(gameObjects(), bricksCounter, soundReader, imageReader);
         windowDimensions = windowController.getWindowDimensions();
         this.windowController = windowController;
         addBall(imageReader, soundReader);
         addPaddles(imageReader, inputListener);
         addFrame();
-        addBricks(imageReader);
+        addBricks(imageReader, brickStrategyFactory);
         addGraphicLifeCounter(imageReader);
         addNumericLifeCounter();
         addBackground(imageReader);
+//        windowController.setTimeScale(.5f);
     }
 
     private void addNumericLifeCounter() {
@@ -125,14 +127,14 @@ public class BrickerGameManager extends GameManager {
         }
     }
 
-    private void addBricks(ImageReader imageReader) {
+    private void addBricks(ImageReader imageReader, BrickStrategyFactory brickStrategyFactory) {
         Renderable brickImage = imageReader.readImage(PATH_TO_BRICK_PNG, false);
         float brickLength = (windowDimensions.x() - (float) FRAME_THICKNESS * 2 - (float) NUM_OF_ROWS) / (float) NUM_OF_ROWS;
         Vector2 brickDimensions = new Vector2(brickLength, BRICK_THICKNESS);
         Vector2 start = Vector2.ZERO.add(new Vector2(FRAME_THICKNESS, FRAME_THICKNESS));
         for (int i = 0; i < NUM_OF_ROWS; i++) {
             for (int j = 0; j < NUM_OF_BRICKS_IN_ROW; j++) {
-                GameObject brick = new Brick(start, brickDimensions, brickImage, new CollisionStrategy(gameObjects(), bricksCounter));
+                GameObject brick = new Brick(start, brickDimensions, brickImage, brickStrategyFactory.getStrategy());
                 this.gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
                 bricksCounter.increment();
                 start = start.add(new Vector2(0, BRICK_THICKNESS + SPACE_BETWEEN_BRICKS));
