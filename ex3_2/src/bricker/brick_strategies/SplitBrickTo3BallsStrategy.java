@@ -1,6 +1,8 @@
 package bricker.brick_strategies;
 
+import bricker.collision.CollisionStrategy;
 import bricker.gameobjects.Ball;
+import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.ImageReader;
@@ -26,14 +28,16 @@ public class SplitBrickTo3BallsStrategy extends RemoveBrickStrategy implements C
     private final GameObjectCollection gameObjects;
     private final ImageReader imageReader;
     private final SoundReader soundReader;
+    private BrickerGameManager gameManager;
     private final Random random = new Random();
 
     public SplitBrickTo3BallsStrategy(GameObjectCollection gameObjects, Counter bricksCounter,
-                                      ImageReader imageReader, SoundReader soundReader) {
+                                      ImageReader imageReader, SoundReader soundReader, BrickerGameManager gameManager) {
         super(gameObjects, bricksCounter);
         this.gameObjects = gameObjects;
         this.imageReader = imageReader;
         this.soundReader = soundReader;
+        this.gameManager = gameManager;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class SplitBrickTo3BallsStrategy extends RemoveBrickStrategy implements C
         Sound collisionSound = soundReader.readSound(PATH_TO_BLOP_WAV);
         for (int i = 0; i < NUM_OF_BALLS; i++) {
             GameObject mockBall = new Ball(thisObj.getCenter().add(new Vector2(BALL_DIMENSION / 2, BALL_DIMENSION / 2)),
-                    new Vector2(BALL_DIMENSION, BALL_DIMENSION), ballImage, collisionSound);
+                    new Vector2(BALL_DIMENSION, BALL_DIMENSION), ballImage, collisionSound, gameManager);
             gameObjects.addGameObject(mockBall);
             setBall(otherObj, mockBall);
         }

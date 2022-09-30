@@ -1,11 +1,12 @@
 package bricker.brick_strategies;
 
+import bricker.collision.CollisionStrategy;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 import danogl.util.Counter;
 
-public class RemoveBrickStrategy implements CollisionStrategy{
+public class RemoveBrickStrategy implements CollisionStrategy {
 
     private final GameObjectCollection gameObjects;
     private final Counter bricksCounter;
@@ -20,4 +21,5 @@ public class RemoveBrickStrategy implements CollisionStrategy{
             bricksCounter.decrement();
         }
     }
+
 }
