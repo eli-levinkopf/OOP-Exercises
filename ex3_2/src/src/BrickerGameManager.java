@@ -42,14 +42,15 @@ public class BrickerGameManager extends GameManager {
     public static final String LOSE_MSG = "You lose!\n";
     public static final String WIN_MSG = "You win!\n";
     public static final String PLAY_AGAIN_MSG = "Play again?";
-    private final Counter bricksCounter = new Counter();
-    private final Counter livesCounter = new Counter(NUM_OF_LIFE);
-    private final GameObjectCollection gameObjectsCollection = new GameObjectCollection();
-    private final GameObject[] livesWidgets = new GameObject[NUM_OF_LIFE];
-    private Vector2 windowDimensions;
-    private GameObject mainBall;
-    private WindowController windowController;
+    private static final Counter bricksCounter = new Counter();
+    private static final Counter livesCounter = new Counter(NUM_OF_LIFE);
+    private static final GameObjectCollection gameObjectsCollection = new GameObjectCollection();
+    private static final GameObject[] livesWidgets = new GameObject[NUM_OF_LIFE];
+    private static Vector2 windowDimensions;
+    private static GameObject mainBall;
+    private static WindowController windowController;
     private static BrickerGameManager gameManager;
+    public static BrickStrategyFactory brickStrategyFactory;
 
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -61,10 +62,10 @@ public class BrickerGameManager extends GameManager {
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        BrickStrategyFactory brickStrategyFactory = new BrickStrategyFactory(gameObjects(), soundReader,
-                imageReader, inputListener, windowController, gameManager);
         windowDimensions = windowController.getWindowDimensions();
-        this.windowController = windowController;
+        BrickerGameManager.windowController = windowController;
+        brickStrategyFactory = new BrickStrategyFactory(gameObjects(), gameManager, imageReader,
+                soundReader, inputListener, windowController, windowDimensions);
         addBall(imageReader, soundReader);
         addPaddle(imageReader, inputListener);
         addFrame();
@@ -136,7 +137,7 @@ public class BrickerGameManager extends GameManager {
         Vector2 start = Vector2.ZERO.add(new Vector2(FRAME_THICKNESS, FRAME_THICKNESS));
         for (int i = 0; i < NUM_OF_ROWS; i++) {
             for (int j = 0; j < NUM_OF_BRICKS_IN_ROW; j++) {
-                GameObject brick = new Brick(start, brickDimensions, brickImage, brickStrategyFactory.getStrategy(), bricksCounter);
+                GameObject brick = new Brick(start, brickDimensions, brickImage, brickStrategyFactory.getStrategy(false), bricksCounter);
                 this.gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
                 bricksCounter.increment();
                 start = start.add(new Vector2(0, BRICK_THICKNESS + SPACE_BETWEEN_BRICKS));
@@ -154,7 +155,6 @@ public class BrickerGameManager extends GameManager {
     }
 
     private void addFrame() {
-        //TODO: for loop
         gameObjects().addGameObject(new GameObject(Vector2.ZERO, new Vector2(FRAME_THICKNESS, windowDimensions.y()),
                 null));
         gameObjects().addGameObject(new GameObject(new Vector2(windowDimensions.x(), 0),
@@ -176,7 +176,7 @@ public class BrickerGameManager extends GameManager {
         Sound collisionSound = soundReader.readSound(PATH_TO_BLOP_WAV);
         GameObject ball = new Ball(Vector2.ZERO, new Vector2(BALL_DIMENSION, BALL_DIMENSION), ballImage, collisionSound);
         this.gameObjects().addGameObject(ball);
-        this.mainBall = ball;
+        mainBall = ball;
         setBall();
     }
 

@@ -10,7 +10,6 @@ import static src.BrickerGameManager.BALL_SPEED;
 public class GoodBot extends Bot {
 
     private final GameObject objectToFollow;
-    private final WindowController windowController;
 
     /**
      * Construct a new GameObject instance.
@@ -28,7 +27,6 @@ public class GoodBot extends Bot {
 
         super(topLeftCorner, dimensions, renderable, windowController);
         this.objectToFollow = objectToFollow;
-        this.windowController = windowController;
     }
 
     @Override
