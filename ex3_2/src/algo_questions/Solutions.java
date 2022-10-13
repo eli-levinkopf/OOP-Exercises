@@ -84,11 +84,11 @@ public class Solutions {
      * @return valid output of algorithm.
      */
     public static int numTrees(int n) {
-        int [] memory = new int[n+1];
+        int[] memory = new int[n + 1];
         memory[0] = memory[1] = 1;
-        for(int i=2; i<=n; ++i) {
-            for(int j=1; j<=i; ++j) {
-                memory[i] += memory[j-1] * memory[i-j];
+        for (int i = 2; i <= n; ++i) {
+            for (int j = 1; j <= i; ++j) {
+                memory[i] += memory[j - 1] * memory[i - j];
             }
         }
         return memory[n];
