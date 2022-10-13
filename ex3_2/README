@@ -2,3 +2,16 @@ eli.levinkopf
 205821879
 
 External Libraries: DanoGameLab https://moodle2.cs.huji.ac.il/nu21/mod/folder/view.php?id=202013
+
+alotStudyTime:
+    I.  I used a greedy algorithm approach for solving this problem. That is, in each iteration take the next shortest
+        task with the next shortest timeSlot available for it. We saw in Algo that the greedy approach achieves the
+        optimal solution.
+    II. In the while loop the algorithm do a constant work and the number of loops is min(m,n) where m is the number
+        of tasks and n is the number of timeSlots. Time complexity: O(min(m,n)).
+
+minLeap:
+    I.
+
+explanation for solution.numTrees:
+    https://leetcode.com/problems/unique-binary-search-trees/discuss/31666/DP-Solution-in-6-lines-with-explanation.-F(i-n)-G(i-1)-*-G(n-i)
