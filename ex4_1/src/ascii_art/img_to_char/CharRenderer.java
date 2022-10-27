@@ -44,6 +44,16 @@ public class CharRenderer {
 
     //for debugging
     public static void printBoolArr(boolean[][] arr) {
-        //add your code here
+        for (boolean[] subArr : arr) {
+            for (boolean bool : subArr) {
+                if (bool){
+                    System.out.print(" ");
+                }
+                else {
+                    System.out.print("#");
+                }
+            }
+            System.out.println();
+        }
     }
 }
