@@ -13,7 +13,7 @@ public class BrightnessImgCharMatcher {
 
     private float getBrightness(char c){
         boolean[][] booleanMatrix = CharRenderer.getImg(c, 16, "Ariel");
-//        for ()
+        for ()
         return .1f;
     }
 }
