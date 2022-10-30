@@ -26,7 +26,7 @@ class Chat {
                 {ChatterBot.REQUESTED_PHRASE_PLACEHOLDER + " is my favorite " +
                         "thing to say. Here: " + ChatterBot.REQUESTED_PHRASE_PLACEHOLDER,
                         "You want me to say " + ChatterBot.REQUESTED_PHRASE_PLACEHOLDER +
-                                ", do you? alright: " + ChatterBot.REQUESTED_PHRASE_PLACEHOLDER};
+                         ", do you? alright: " + ChatterBot.REQUESTED_PHRASE_PLACEHOLDER};
 
         ChatterBot[] bots = {new ChatterBot("Bot1", repliesToLegalRequestBot1
                 , repliesToIllegalRequestBot1), new ChatterBot("Bot2",

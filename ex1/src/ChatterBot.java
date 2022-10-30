@@ -21,6 +21,12 @@ class ChatterBot {
     String[] repliesToIllegalRequest, repliesToLegalRequest;
     String name;
 
+    /**
+     * Constructor for creating a new ChatterBot.
+     * @param name The name of the new ChatterBot instance.
+     * @param repliesToLegalRequest Replies to legal requests that the bot is allowed to send.
+     * @param repliesToIllegalRequest Replies to illegal requests that the bot is allowed to send.
+     */
     ChatterBot(String name, String[] repliesToLegalRequest,
                String[] repliesToIllegalRequest) {
         this.name = name;
@@ -28,13 +34,19 @@ class ChatterBot {
         this.repliesToIllegalRequest =
                 new String[repliesToIllegalRequest.length];
 
-        System.arraycopy(repliesToLegalRequest, 0, this.repliesToLegalRequest
+        System.arraycopy(repliesToLegalRequest, 0,
+                this.repliesToLegalRequest
                 , 0, repliesToLegalRequest.length);
         System.arraycopy(repliesToIllegalRequest, 0,
                 this.repliesToIllegalRequest, 0,
                 repliesToIllegalRequest.length);
     }
 
+    /**
+     * Replies according to the specified message
+     * @param statement Statement to be replies to.
+     * @return
+     */
     String replyTo(String statement) {
         if (statement.startsWith(REQUEST_PREFIX)) {
             return replacePlaceholderInARandomPattern(repliesToLegalRequest,
@@ -53,6 +65,9 @@ class ChatterBot {
         return responsePattern.replaceAll(placeholder, replaceTo);
     }
 
+    /**
+     * @return Returns the name of the ChatterBot.
+     */
     String getName() {
         return name;
     }
