@@ -1,12 +1,16 @@
 public class PlayerFactory {
 
     public Player buildPlayer(String playerType){
-        return switch (playerType.toLowerCase()) {
-            case "human" -> new HumanPlayer();
-            case "whatever" -> new WhateverPlayer();
-            case "clever" -> new CleverPlayer();
-            case "genius" -> new GeniusPlayer();
-            default -> null;
-        };
+        switch (playerType.toLowerCase()) {
+            case "human":
+                return new HumanPlayer();
+            case "whatever":
+                return new WhateverPlayer();
+            case "clever":
+                return new CleverPlayer();
+            case "genius":
+                return new GeniusPlayer();
+        }
+        return null;
     }
 }

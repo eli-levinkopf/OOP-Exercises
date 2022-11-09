@@ -10,13 +10,26 @@ public class CleverPlayer implements Player {
         for (int row = 0; row < board.getSize(); ++row) {
             for (int col = 0; col < board.getSize(); ++col) {
                 if (board.getMark(row, col) == mark) {
-                    if (board.putMark(mark, row + random.nextInt(-1, 2),
-                            col + random.nextInt(-1, 2))) {
+                    if (board.putMark(mark, row + getRandomDirection(),
+                            col + getRandomDirection())) {
                         return;
                     }
                 }
             }
         }
         WhateverPlayer.playTurn(board, mark);
+    }
+
+    private int getRandomDirection() {
+        int rand = random.nextInt(3);
+        switch (rand) {
+            case 0:
+                return -1;
+            case 1:
+                return -0;
+            case 2:
+                return 1;
+        }
+        return 0;
     }
 }

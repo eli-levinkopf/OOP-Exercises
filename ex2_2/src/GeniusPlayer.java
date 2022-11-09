@@ -57,8 +57,7 @@ public class GeniusPlayer implements Player {
     }
 
     private void playInLastCol(Board board, Mark mark) {
-//        board.putMark(mark, idxForLastCell, Board.WIN_STREAK - 1);
-        board.putMark(mark, idxForLastCell, board.getSize() - 1); //TODO ?
+        board.putMark(mark, idxForLastCell, board.getSize() - 1);
         idxForLastCell++;
     }
 }

@@ -15,7 +15,7 @@ public class WhateverPlayer implements Player {
     }
 
     private void choseRandomCell(Board board, int[] randomCell) {
-        randomCell[ROW] = rand.nextInt(0, board.getSize());
-        randomCell[COL] = rand.nextInt(0, board.getSize());
+        randomCell[ROW] = rand.nextInt(board.getSize());
+        randomCell[COL] = rand.nextInt(board.getSize());
     }
 }

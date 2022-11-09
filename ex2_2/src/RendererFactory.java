@@ -1,10 +1,12 @@
 public class RendererFactory {
 
     public Renderer buildRenderer(String rendererType, int size){
-        return switch (rendererType){
-            case "console" -> new ConsoleRenderer(size);
-            case "none" -> new VoidRenderer();
-            default -> null;
-        };
+        switch (rendererType){
+            case "console":
+                return new ConsoleRenderer(size);
+            case "none":
+                return new VoidRenderer();
+        }
+        return null;
     }
 }

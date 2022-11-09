@@ -57,15 +57,25 @@ public class Tournament {
     private void updateResults(int[] results, Mark winner, int currentRound) {
         if (currentRound % 2 == 0) {
             switch (winner) {
-                case X -> results[FIRST_PLAYER_IDX]++;
-                case O -> results[SECOND_PLAYER_IDX]++;
-                default -> results[TIES]++;
+                case X:
+                    results[FIRST_PLAYER_IDX]++;
+                    break;
+                case O:
+                    results[SECOND_PLAYER_IDX]++;
+                    break;
+                default:
+                    results[TIES]++;
             }
         } else {
             switch (winner) {
-                case X -> results[SECOND_PLAYER_IDX]++;
-                case O -> results[FIRST_PLAYER_IDX]++;
-                default -> results[TIES]++;
+                case X:
+                    results[SECOND_PLAYER_IDX]++;
+                    break;
+                case O:
+                    results[FIRST_PLAYER_IDX]++;
+                    break;
+                default:
+                    results[TIES]++;
             }
         }
     }
@@ -84,7 +94,7 @@ public class Tournament {
 
     private void showResults(int[] results) {
         System.out.format("######### Results #########\nPlayer 1, %s won: %d rounds\nPlayer 2, " +
-                        "%s won: %d rounds Ties: %d"
+                        "%s won: %d rounds\nTies: %d"
                 , playerType1, results[FIRST_PLAYER_IDX], playerType2,
                 results[SECOND_PLAYER_IDX], results[DRAWS_IDX]);
     }
