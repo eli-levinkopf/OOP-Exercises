@@ -1,13 +1,37 @@
 eli.levinkopf
+205821879
 
-Players: Player 1: CleverPlayer | Player 2: CleverPlayer
-Results: Player 1: 256 | Player 2: 244 | Draws: 0
+Whatever player strategy:
+This strategy chooses a random ceil in the board and marks it.
 
-Players: Player 1: SnartypamtsPlayer | Player 2: SnartypamtsPlayer
-Results: Player 1: 250 | Player 2: 250 | Draws: 0
+Clever player strategy:
+this strategy searches for a ceil with player's mark and chooses random one of ceil's neighbours
+and marks them it.
 
-Players: Player 1: CleverPlayer | Player 2: SnartypamtsPlayer
-Results: Player 1: 0 | Player 2: 500 | Draws: 0
+Genius player strategy:
+---
 
-Players: Player 1: whateverPlayer | Player 2: whateverPlayer
-Results: Player 1: 5029 | Player 2: 4965 | Draws: 6
+Answers for the question:
+The design advantage is that the interface promises that all players will have to implement the same API.
+Here is the function playTurn that all players must implement, so we can use player as a generic player
+without any knowledge about the player's type.
+
+The tournament are with 4*4 board, 3 win streak and 10000 rounds.
+
+Tournament 1 - CleverPlayer VS WhateverPlayer:
+######### Results #########
+Player 1, clever won: 6494 rounds
+Player 2, whatever won: 3500 rounds
+Ties: 6
+
+Tournament 1 - CleverPlayer VS GeniusPlayer:
+######### Results #########
+Player 1, clever won: 704 rounds
+Player 2, genius won: 9296 rounds
+Ties: 0
+
+Tournament 1 - WhateverPlayer VS WhateverPlayer:
+######### Results #########
+Player 1, whatever won: 4970 rounds
+Player 2, whatever won: 5022 rounds
+Ties: 8
