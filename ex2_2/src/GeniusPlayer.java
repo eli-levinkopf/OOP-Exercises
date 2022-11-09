@@ -1,4 +1,4 @@
-public class SnartypamtsPlayer implements Player {
+public class GeniusPlayer implements Player {
     private int lastRow = 0;
     private int lastCol = 0;
     private boolean playInRows = true;
@@ -28,7 +28,7 @@ public class SnartypamtsPlayer implements Player {
         if (playInRows && board.putMark(mark, lastRow, lastCol)) {
             lastCol++;
         } else {
-            if (lastRow == 0 && lastCol == 0){
+            if (lastRow == 0 && lastCol == 0) {
                 firstCell = false;
                 playInLastCol(board, mark);
                 return;
@@ -57,7 +57,8 @@ public class SnartypamtsPlayer implements Player {
     }
 
     private void playInLastCol(Board board, Mark mark) {
-        board.putMark(mark, idxForLastCell, Board.WIN_STREAK - 1);
+//        board.putMark(mark, idxForLastCell, Board.WIN_STREAK - 1);
+        board.putMark(mark, idxForLastCell, board.getSize() - 1); //TODO ?
         idxForLastCell++;
     }
 }

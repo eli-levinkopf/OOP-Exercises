@@ -10,7 +10,8 @@ public class HumanPlayer implements Player{
         getNumber();
         num = scanner.nextInt();
         while (!board.putMark(mark, num / 10 - 1, num % 10 - 1)) {
-            System.out.print("Your coordinates are invalid. Please enter new coordinates: ");
+            System.out.print("Player " + mark + ", " + num + " Invalid " +
+                    "coordinates, type again: ");
             getNumber();
             num = scanner.nextInt();
         }

@@ -1,7 +1,5 @@
 public class VoidRenderer implements Renderer {
 
     @Override
-    public void renderBoard(Board board) {
-        return;
-    }
+    public void renderBoard(Board board) {}
 }

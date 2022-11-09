@@ -8,14 +8,14 @@ public class WhateverPlayer implements Player {
     @Override
     public void playTurn(Board board, Mark mark) {
         int[] randomCell = new int[2];
-        choseRandomCell(randomCell);
+        choseRandomCell(board, randomCell);
         while (!board.putMark(mark, randomCell[ROW], randomCell[COL])) {
-            choseRandomCell(randomCell);
+            choseRandomCell(board, randomCell);
         }
     }
 
-    private void choseRandomCell(int[] randomCell) {
-        randomCell[ROW] = rand.nextInt(0, Board.SIZE);
-        randomCell[COL] = rand.nextInt(0, Board.SIZE);
+    private void choseRandomCell(Board board, int[] randomCell) {
+        randomCell[ROW] = rand.nextInt(0, board.getSize());
+        randomCell[COL] = rand.nextInt(0, board.getSize());
     }
 }
