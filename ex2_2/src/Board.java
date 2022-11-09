@@ -1,14 +1,23 @@
 public class Board {
-    public static int SIZE = 4; //TODO: public only for tests
-    public static int WIN_STREAK = 3; //TODO: public only for tests
 
+    // =========== constants ===========
+    private static final int SIZE = 4;
+
+    // =========== private variables ===========
     private final Mark[][] board;
     private final int size;
 
+    /**
+     * Default constructor for a new board instance.
+     */
     public Board() {
         this(SIZE);
     }
 
+    /**
+     * Constructs a new board instance with the given board size.
+     * @param size the size of the board.
+     */
     public Board(int size){
         this.size = size;
         board = new Mark[size][size];

@@ -1,4 +1,6 @@
 public class GeniusPlayer implements Player {
+
+    // =========== private variables ===========
     private int lastRow = 0;
     private int lastCol = 0;
     private boolean playInRows = true;
@@ -9,6 +11,11 @@ public class GeniusPlayer implements Player {
     private int idxForLastCell = 0;
     private final WhateverPlayer WhateverPlayer = new WhateverPlayer();
 
+    /**
+     * Play one turn for this genius player.
+     * @param board the board to play.
+     * @param mark the mark of this player.
+     */
     @Override
     public void playTurn(Board board, Mark mark) {
         if (lastMark != null && lastMark != mark) {
@@ -56,6 +63,11 @@ public class GeniusPlayer implements Player {
         }
     }
 
+    /**
+     * Play in the last column.
+     * @param board board to play.
+     * @param mark player's mark.
+     */
     private void playInLastCol(Board board, Mark mark) {
         board.putMark(mark, idxForLastCell, board.getSize() - 1);
         idxForLastCell++;

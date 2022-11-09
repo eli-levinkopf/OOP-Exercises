@@ -1,7 +1,9 @@
 public class Game {
+    // =========== constants ===========
     private static final int DEFAULT_SIZE = 4;
     private static final int DEFAULT_WIN_STREAK = 3;
 
+    // =========== private variables ===========
     private final Renderer renderer;
     private final Player playerX;
     private final Player playerO;
@@ -12,11 +14,24 @@ public class Game {
     private boolean gameEnded = false;
     private Mark winner = Mark.BLANK;
 
-
+    /**
+     * Constructs a new Game with the given players, renderer and default board size and win stride.
+     * @param playerX the player to play as X.
+     * @param playerO the player to play as O.
+     * @param renderer the renderer to use.
+     */
     public Game(Player playerX, Player playerO, Renderer renderer) {
         this(playerX, playerO, DEFAULT_SIZE, DEFAULT_WIN_STREAK, renderer);
     }
 
+    /**
+     * Constructs a new Game with the given players, renderer, board size and win stride.
+     * @param playerX the player to play as X.
+     * @param playerO the player to play as O.
+     * @param size size for board.
+     * @param winStreak size for win streak.
+     * @param renderer the renderer to use.
+     */
     public Game(Player playerX, Player playerO, int size, int winStreak, Renderer renderer) {
         board = new Board(size);
         numOfEmptyCells = size * size;
@@ -28,10 +43,17 @@ public class Game {
 
     }
 
+    /**
+     * @return the num of ceils to win.
+     */
     public int getWinStreak() {
         return winStreak;
     }
 
+    /**
+     * Runs an entire game.
+     * @return the winner of this game.
+     */
     public Mark run() {
         Player[] players = {playerX, playerO};
         Mark[] marks = {Mark.X, Mark.O};
@@ -48,6 +70,10 @@ public class Game {
         return winner;
     }
 
+    /**
+     * check if there is a winner.
+     * @param mark the last mark that has been play.
+     */
     private void checkWinner(Mark mark) {
         Mark[][] matrix = board.getMark();
         if (checkWinnerForRowsAndCols(mark, matrix, true)) { //check col
@@ -62,6 +88,12 @@ public class Game {
         checkWinnerForAntiDiagonal(mark, matrix); //check anti-diagonal (\)
     }
 
+    /**
+     * Checks for winner in anti-diagonal.
+     * @param mark the last mark that has been play.
+     * @param matrix board that represents the play.
+     * @return true if there is a winner, false otherwise.
+     */
     private boolean checkWinnerForAntiDiagonal(Mark mark, Mark[][] matrix) {
 
         int countOfCellsToWin;
@@ -105,6 +137,12 @@ public class Game {
         return false;
     }
 
+    /**
+     * Checks for winner in diagonal.
+     * @param mark the last mark that has been play.
+     * @param matrix board that represents the play.
+     * @return true if there is a winner, false otherwise.
+     */
     private boolean checkWinnerForDiagonal(Mark mark, Mark[][] matrix) {
         int countOfCellsToWin;
         int row, col;
@@ -148,6 +186,12 @@ public class Game {
         return false;
     }
 
+    /**
+     * Checks for winner in rows and columns.
+     * @param mark the last mark that has been play.
+     * @param matrix board that represents the play.
+     * @return true if there is a winner, false otherwise.
+     */
     private boolean checkWinnerForRowsAndCols(Mark mark, Mark[][] matrix, boolean flagForRow) {
         int countOfCellsToWin;
         for (int i = 0; i < size; i++) {
@@ -168,6 +212,10 @@ public class Game {
         return false;
     }
 
+    /**
+     * Updates the current number of empty cells.
+     * @param mark the last mark that has been play.
+     */
     private void updateNumOfEmptyCells(Mark mark) {
         if (mark != Mark.BLANK) {
             numOfEmptyCells--;

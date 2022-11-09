@@ -1,8 +1,18 @@
 import java.util.Scanner;
 
 public class HumanPlayer implements Player{
+    // =========== constants ===========
+    public static final String NOT_A_NUMBER_MSG = "That's not a number! Please enter new " +
+            "coordinates: ";
+
+    // =========== private variables ===========
     private static final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Play one turn for this human player.
+     * @param board the board to play.
+     * @param mark the mark of this player.
+     */
     @Override
     public void playTurn(Board board, Mark mark) {
         int num;
@@ -17,9 +27,12 @@ public class HumanPlayer implements Player{
         }
     }
 
+    /**
+     * Get a number from the user.
+     */
     private void getNumber() {
         while (!scanner.hasNextInt()){
-            System.out.print("That's not a number! Please enter new coordinates: ");
+            System.out.print(NOT_A_NUMBER_MSG);
             scanner.next();
         }
     }

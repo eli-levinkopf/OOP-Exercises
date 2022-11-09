@@ -9,7 +9,8 @@ this strategy searches for a ceil with player's mark and chooses random one of c
 and marks them it.
 
 Genius player strategy:
----
+Search for a ceil with player's mark and try to find an empty ceil next to it. If not found then play as
+whatever player.
 
 Answers for the question:
 The design advantage is that the interface promises that all players will have to implement the same API.

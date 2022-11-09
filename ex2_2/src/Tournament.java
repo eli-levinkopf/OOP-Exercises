@@ -1,4 +1,6 @@
 public class Tournament {
+
+    // =========== constants ===========
     public static final String INVALID_PLAYER_MSG = "Choose a player, and start again\nThe " +
             "players:" + " [human, clever, whatever, genius]";
     public static final String INVALID_WIN_STREAK_MSG = "Invalid winStreak. Choose winStreak " +
@@ -10,6 +12,7 @@ public class Tournament {
     public static final int NUMBER_OF_PLAYERS = 2;
     public static final int TIES = 2;
 
+    // =========== private variables ===========
     private static final int ARG_FOR_NUM_OF_ROUNDS = 0;
     private static final int ARG_FOR_SIZE = 1;
     private static final int ARG_FOR_WIN_STREAK = 2;
@@ -28,6 +31,12 @@ public class Tournament {
     private static String playerType1;
     private static String playerType2;
 
+    /**
+     * Constructs a new instance of Tournament.
+     * @param rounds number of rounds to play.
+     * @param renderer the renderer to use.
+     * @param players players to play in the tournament.
+     */
     public Tournament(int rounds, Renderer renderer, Player[] players) {
         Tournament.rounds = rounds;
         Tournament.renderer = renderer;
@@ -35,6 +44,12 @@ public class Tournament {
         player2 = players[SECOND_PLAYER_IDX];
     }
 
+    /**
+     * Runs an entire tournament.
+     * @param size board size.
+     * @param winStreak the number of ceil to win in the play.
+     * @param playerNames name of 2 players.
+     */
     public void playTournament(int size, int winStreak, String[] playerNames) {
         Game game;
         Mark winner;
@@ -54,6 +69,12 @@ public class Tournament {
         showResults(results);
     }
 
+    /**
+     * Updates the results of the game.
+     * @param results the results of the game.
+     * @param winner the winner of the game.
+     * @param currentRound the current round of the game.
+     */
     private void updateResults(int[] results, Mark winner, int currentRound) {
         if (currentRound % 2 == 0) {
             switch (winner) {
@@ -92,6 +113,10 @@ public class Tournament {
         System.out.format("+-----------------+--------+%n");
     }
 
+    /**
+     * Display the results.
+     * @param results the list of results in  the game.
+     */
     private void showResults(int[] results) {
         System.out.format("######### Results #########\nPlayer 1, %s won: %d rounds\nPlayer 2, " +
                         "%s won: %d rounds\nTies: %d"
