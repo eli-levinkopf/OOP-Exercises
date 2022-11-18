@@ -5,12 +5,15 @@ import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
+import src.BrickerGameManager;
+
 
 public class GraphicLifeCounter extends GameObject {
 
-    private Counter livesCounter;
-    private GameObjectCollection gameObjectsCollection;
-    private int numOfLives;
+
+    private final Counter livesCounter;
+    private final GameObjectCollection gameObjectsCollection;
+    private final GameObject[] livesWidgets;
 
     /**
      * This is the constructor for the graphic lives counter. It creates a 0x0 sized object (to
@@ -31,11 +34,20 @@ public class GraphicLifeCounter extends GameObject {
     public GraphicLifeCounter(Vector2 widgetTopLeftCorner, Vector2 widgetDimensions,
                               Counter livesCounter, Renderable widgetRenderable,
                               GameObjectCollection gameObjectsCollection, int numOfLives) {
-        super(widgetTopLeftCorner, widgetDimensions, widgetRenderable);
-
+        super(Vector2.ZERO, Vector2.ZERO, null);
         this.livesCounter = livesCounter;
         this.gameObjectsCollection = gameObjectsCollection;
-        this.numOfLives = numOfLives;
+        livesWidgets = new GameObject[numOfLives];
+
+        GameObject heart;
+        for (int i = 0; i < numOfLives; i++) {
+            heart = new GameObject(widgetTopLeftCorner, widgetDimensions, widgetRenderable);
+            gameObjectsCollection.addGameObject(heart, BrickerGameManager.LIFE_WIDGETS_LAYER);
+            livesWidgets[i] = heart;
+            widgetTopLeftCorner =
+                    widgetTopLeftCorner.add(new Vector2(widgetDimensions.x() +
+                            BrickerGameManager.SPACE_BETWEEN_WIDGETS, 0));
+        }
     }
 
     /**
@@ -47,5 +59,9 @@ public class GraphicLifeCounter extends GameObject {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+        if (livesWidgets.length > livesCounter.value()) {
+            gameObjectsCollection.removeGameObject(livesWidgets[livesCounter.value()],
+                    BrickerGameManager.LIFE_WIDGETS_LAYER);
+        }
     }
 }

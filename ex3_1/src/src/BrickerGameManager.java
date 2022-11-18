@@ -9,15 +9,17 @@ import danogl.collisions.Layer;
 import danogl.components.CoordinateSpace;
 import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
-import danogl.gui.rendering.TextRenderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
 public class BrickerGameManager extends GameManager {
+
+    public static final int SPACE_BETWEEN_WIDGETS = 10;
+    public static final int LIFE_WIDGETS_LAYER = -1;
+
     private static final String PATH_TO_BRICK_PNG = "assets/brick.png";
     private static final String PATH_TO_BACKGROUND_JPEG = "assets/DARK_BG2_small.jpeg";
     private static final String PATH_TO_PADDLE_PNG = "assets/paddle.png";
@@ -33,12 +35,10 @@ public class BrickerGameManager extends GameManager {
     private static final int FRAME_THICKNESS = 15;
     private static final int BRICK_THICKNESS = 15;
     private static final int WIDGET_DIMENSION = 20;
-    private static final int SPACE_BETWEEN_WIDGETS = 10;
     private static final int NUM_OF_ROWS = 7;
     private static final int NUM_OF_BRICKS_IN_ROW = 8;
     private static final int SPACE_BETWEEN_BRICKS = 1;
     private static final int NUM_OF_LIFE = 3;
-    private static final int LIFE_WIDGETS_LAYER = -1;
     private static final float BALL_DIMENSION = 20;
     private static final float PADDLE_DIMENSION_Y = 15;
     private static final float PADDLE_DIMENSION_X = 100;
@@ -50,8 +50,8 @@ public class BrickerGameManager extends GameManager {
     private final Counter bricksCounter = new Counter();
     private final Counter livesCounter = new Counter(NUM_OF_LIFE);
     private final GameObjectCollection gameObjectsCollection = new GameObjectCollection();
-    private final GameObject[] livesWidgets = new GameObject[NUM_OF_LIFE];
     private UserInputListener inputListener;
+    private GraphicLifeCounter graphicLifeCounter;
 
 
     /**
@@ -112,18 +112,9 @@ public class BrickerGameManager extends GameManager {
         Vector2 widgetTopLeftCorner = new Vector2(FRAME_THICKNESS,
                 windowDimensions.y() - FRAME_THICKNESS - WIDGET_DIMENSION);
         Vector2 widgetDimensions = new Vector2(WIDGET_DIMENSION, WIDGET_DIMENSION);
-        for (int i = 0; i < NUM_OF_LIFE; i++) {
-            GraphicLifeCounter graphicLifeCounter = new GraphicLifeCounter(widgetTopLeftCorner,
-                    widgetDimensions, livesCounter, GraphicLifeCounterImage, gameObjects(),
-                    NUM_OF_LIFE);
-            gameObjects().addGameObject(graphicLifeCounter, LIFE_WIDGETS_LAYER);
-            //TODO: gameObjectsCollection?
-//            gameObjectsCollection.addGameObject(graphicLifeCounter);
-            livesWidgets[i] = graphicLifeCounter;
-            widgetTopLeftCorner =
-                    widgetTopLeftCorner.add(new Vector2(WIDGET_DIMENSION + SPACE_BETWEEN_WIDGETS,
-                            0));
-        }
+        graphicLifeCounter = new GraphicLifeCounter(widgetTopLeftCorner,
+                widgetDimensions, livesCounter, GraphicLifeCounterImage, gameObjects(), NUM_OF_LIFE);
+        gameObjectsCollection.addGameObject(graphicLifeCounter);
     }
 
     /**
@@ -134,6 +125,7 @@ public class BrickerGameManager extends GameManager {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+        graphicLifeCounter.update(deltaTime);
         checkForGameEnd();
     }
 
@@ -146,10 +138,7 @@ public class BrickerGameManager extends GameManager {
         if (ball.getCenter().y() > windowDimensions.y()) {
             livesCounter.decrement();
             setBall();
-            if (livesCounter.value() > 0) {
-                gameObjects().removeGameObject(livesWidgets[livesCounter.value()],
-                        LIFE_WIDGETS_LAYER);
-            } else if (livesCounter.value() == 0) {
+        if (livesCounter.value() == 0) {
                 prompt += LOSE_MSG;
             }
         } else if (bricksCounter.value() == 0 || inputListener.isKeyPressed(KeyEvent.VK_W)) {
@@ -176,8 +165,8 @@ public class BrickerGameManager extends GameManager {
      */
     private void addBricks(ImageReader imageReader) {
         Renderable brickImage = imageReader.readImage(PATH_TO_BRICK_PNG, false);
-        float brickLength =
-                (windowDimensions.x() - (float) FRAME_THICKNESS * 2 - (float) NUM_OF_ROWS) / (float) NUM_OF_ROWS;
+        float brickLength = (windowDimensions.x() - (float) FRAME_THICKNESS * 2
+                - (float) NUM_OF_ROWS) / (float) NUM_OF_ROWS;
         Vector2 brickDimensions = new Vector2(brickLength, BRICK_THICKNESS);
         Vector2 start = Vector2.ZERO.add(new Vector2(FRAME_THICKNESS, FRAME_THICKNESS));
         for (int i = 0; i < NUM_OF_ROWS; i++) {
@@ -209,7 +198,6 @@ public class BrickerGameManager extends GameManager {
      * Adds a frame to the game board.
      */
     private void addFrame() {
-        //TODO: for loop
         gameObjects().addGameObject(new GameObject(Vector2.ZERO, new Vector2(FRAME_THICKNESS,
                 windowDimensions.y()), null));
         gameObjects().addGameObject(new GameObject(new Vector2(windowDimensions.x(), 0),
