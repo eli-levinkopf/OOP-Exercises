@@ -7,7 +7,7 @@ import danogl.util.Counter;
 
 public class CollisionStrategy {
 
-    private final GameObjectCollection gameObjects;
+    private final GameObjectCollection gameObjectCollection;
 
     /**
      * Creates a new collision strategy instance.
@@ -15,7 +15,7 @@ public class CollisionStrategy {
      * @param gameObjects An object which holds all game objects of the game running.
      */
     public CollisionStrategy(GameObjectCollection gameObjects) {
-        this.gameObjects = gameObjects;
+        this.gameObjectCollection = gameObjects;
     }
 
     /**
@@ -28,7 +28,8 @@ public class CollisionStrategy {
      * @param bricksCounter the number of active bricks.
      */
     public void onCollision(GameObject thisObj, GameObject otherObj, Counter bricksCounter) {
-        gameObjects.removeGameObject(thisObj, Layer.STATIC_OBJECTS);
-        bricksCounter.decrement();
+        if(gameObjectCollection.removeGameObject(thisObj, Layer.STATIC_OBJECTS)){
+            bricksCounter.decrement();
+        }
     }
 }
