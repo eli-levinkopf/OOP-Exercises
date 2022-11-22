@@ -189,7 +189,7 @@ public class BrickerGameManager extends GameManager {
      */
     private void addBackground(ImageReader imageReader) {
         GameObject background = new GameObject(Vector2.ZERO, windowDimensions,
-                imageReader.readImage(PATH_TO_BACKGROUND_JPEG, true));
+                imageReader.readImage(PATH_TO_BACKGROUND_JPEG, false));
         gameObjects().addGameObject(background, Layer.BACKGROUND);
         background.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
     }
