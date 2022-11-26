@@ -7,6 +7,7 @@ import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
+import src.BrickerGameManager;
 
 public class MockPaddle extends Paddle{
 
@@ -42,6 +43,7 @@ public class MockPaddle extends Paddle{
         }
         if (counter.value() == numCollisionsToDisappear) {
             gameObjectCollection.removeGameObject(this);
+            BrickerGameManager.mockPaddle = false;
         }
     }
 }

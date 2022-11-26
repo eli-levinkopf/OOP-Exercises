@@ -3,7 +3,6 @@ package src.gameobjects;
 import danogl.GameObject;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
-import danogl.util.Counter;
 import danogl.util.Vector2;
 
 import java.awt.event.KeyEvent;
@@ -14,7 +13,6 @@ public class Paddle extends GameObject {
     private final UserInputListener inputListener;
     private final Vector2 windowDimensions;
     private final int minDistanceFromEdge;
-    private final Counter paddleCounter = new Counter(0);
 
     /**
      * Construct a new GameObject instance.
@@ -24,17 +22,29 @@ public class Paddle extends GameObject {
      * @param dimensions       Width and height in window coordinates.
      * @param renderable       The renderable representing the object. Can be null, in which case
      *                         the GameObject will not be rendered.
-     * @param inputListener
-     * @param windowDimensions
+     * @param inputListener    The input listener which waits for user inputs and acts on them.
+     * @param windowDimensions The dimensions of the screen, to know the limits for paddle
+     *                         movements.
      */
-    public Paddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, UserInputListener inputListener,
-                  Vector2 windowDimensions, int minDistanceFromEdge) {
+    public Paddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
+                  UserInputListener inputListener, Vector2 windowDimensions,
+                  int minDistanceFromEdge) {
         super(topLeftCorner, dimensions, renderable);
         this.inputListener = inputListener;
         this.windowDimensions = windowDimensions;
         this.minDistanceFromEdge = minDistanceFromEdge;
     }
 
+    /**
+     * This method is overwritten from GameObject. If right and/or left key is recognised as
+     * pressed by the input listener, it moves the paddle, and check that it doesn't move past
+     * @param deltaTime The time elapsed, in seconds, since the last frame. Can
+     *                  be used to determine a new position/velocity by multiplying
+     *                  this delta with the velocity/acceleration respectively
+     *                  and adding to the position/velocity:
+     *                  velocity += deltaTime*acceleration
+     *                  pos += deltaTime*velocity
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -50,21 +60,11 @@ public class Paddle extends GameObject {
             setTopLeftCorner(new Vector2(minDistanceFromEdge + SAFE_SPACE_FROM_EDGE,
                     getTopLeftCorner().y()));
         }
-        if (getTopLeftCorner().x() > windowDimensions.x() - minDistanceFromEdge - getDimensions().x()
-                - SAFE_SPACE_FROM_EDGE) {
-            setTopLeftCorner(new Vector2(windowDimensions.x() - minDistanceFromEdge - getDimensions().x()
-                    - SAFE_SPACE_FROM_EDGE, getTopLeftCorner().y()));
+        if (getTopLeftCorner().x() > windowDimensions.x() -
+                minDistanceFromEdge - getDimensions().x() - SAFE_SPACE_FROM_EDGE) {
+            setTopLeftCorner(new Vector2(windowDimensions.x() - minDistanceFromEdge -
+                    getDimensions().x() - SAFE_SPACE_FROM_EDGE, getTopLeftCorner().y()));
         }
     }
-
-//    @Override
-//    public void onCollisionEnter(GameObject other, Collision collision) {
-//        super.onCollisionEnter(other, collision);
-//        collisionStrategy.onCollision(this, other);
-//    }
-
-//    public Counter getCounter() {
-//        return paddleCounter;
-//    }
 
 }

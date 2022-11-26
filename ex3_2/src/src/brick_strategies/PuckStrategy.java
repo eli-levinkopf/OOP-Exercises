@@ -17,10 +17,6 @@ import static src.BrickerGameManager.*;
 public class PuckStrategy extends RemoveBrickStrategyDecorator {
 
     private static final int NUM_OF_BALLS = 3;
-    public static final float TWENTY_PERCENT_SLOWER = .8f;
-    public static final float TWENTY_PERCENT_FASTER = 1.2f;
-    public static final int ROTATE_LEFT = -180;
-    public static final int ROTATE_RIGHT = 180;
     public static final String PATH_TO_MOCK_BALL_PNG = "assets/mockBall.png";
     private final ImageReader imageReader;
     private final SoundReader soundReader;
@@ -49,15 +45,17 @@ public class PuckStrategy extends RemoveBrickStrategyDecorator {
         Sound collisionSound = soundReader.readSound(PATH_TO_BLOP_WAV);
         for (int i = 0; i < NUM_OF_BALLS; i++) {
             GameObject mockBall = new Puck(thisObj.getCenter().add(new Vector2(BALL_DIMENSION / 2, BALL_DIMENSION / 2)),
-                    new Vector2(BALL_DIMENSION, BALL_DIMENSION), ballImage, collisionSound);
+                    new Vector2(BALL_DIMENSION*1.3f, BALL_DIMENSION*1.3f), ballImage,
+                    collisionSound, getGameObjectCollection());
             getGameObjectCollection().addGameObject(mockBall);
             setBall(otherObj, mockBall);
         }
     }
 
     private void setBall(GameObject mainBall, GameObject mockBall) {
-        Vector2 ballVelocity = mainBall.getVelocity().mult(random.nextFloat(TWENTY_PERCENT_SLOWER, TWENTY_PERCENT_FASTER));
-        ballVelocity = ballVelocity.rotated(random.nextFloat(ROTATE_LEFT, ROTATE_RIGHT));
+        float degrees = (float)random.nextInt(4)*90;
+        Vector2 ballVelocity = mainBall.getVelocity();
+        ballVelocity = ballVelocity.rotated(degrees);
         mockBall.setVelocity(ballVelocity);
     }
 }

@@ -23,13 +23,23 @@ public class Ball extends GameObject {
      * @param dimensions    Width and height in window coordinates.
      * @param renderable    The renderable representing the object. Can be null, in which case
      *                      the GameObject will not be rendered.
+     * @param collisionSound sound that will be played when the object is colliding with other
+     *                       object.
      */
-    //TODO: remove gameManager
     public Ball(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, Sound collisionSound) {
         super(topLeftCorner, dimensions, renderable);
         this.collisionSound = collisionSound;
     }
 
+    /**
+     * Override this method to remove the ball from the if it out of frame.
+     * @param deltaTime The time elapsed, in seconds, since the last frame. Can
+     *                  be used to determine a new position/velocity by multiplying
+     *                  this delta with the velocity/acceleration respectively
+     *                  and adding to the position/velocity:
+     *                  velocity += deltaTime*acceleration
+     *                  pos += deltaTime*velocity
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -41,6 +51,13 @@ public class Ball extends GameObject {
         }
     }
 
+    /**
+     * This method overwrites the OnCollisionEnter of GameObject. When it collides with another
+     * object, it flips its direction.
+     *
+     * @param other the object that the ball collided with.
+     * @param collision the collision parameters.
+     */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
@@ -52,6 +69,9 @@ public class Ball extends GameObject {
         collisionSound.play();
     }
 
+    /**
+     * @return the number of collisions that have been created with this object.
+     */
     public int getCollisionCount(){
         return ballCounter.value();
     }

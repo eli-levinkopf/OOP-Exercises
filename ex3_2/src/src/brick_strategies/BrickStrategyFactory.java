@@ -7,55 +7,84 @@ import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
-
+import src.gameobjects.GraphicLifeCounter;
+import src.gameobjects.NumericLifeCounter;
 import java.util.Random;
 
 public class BrickStrategyFactory {
 
     public static final int NUM_OF_STRATEGIES = 6;
-    private static GameObjectCollection gameObjects;
-    private static SoundReader soundReader;
-    private static ImageReader imageReader;
+
+    private final GameObjectCollection gameObjects;
+    private final SoundReader soundReader;
+    private final ImageReader imageReader;
     private final UserInputListener inputListener;
     private final WindowController windowController;
     private final BrickerGameManager gameManager;
     private final Random random = new Random();
     private final RemoveBrickStrategy removeBrickStrategy;
+    private final GraphicLifeCounter graphicLifeCounter;
+    private final NumericLifeCounter numericLifeCounter;
     private final Vector2 windowDimensions;
 
 
     public BrickStrategyFactory(GameObjectCollection gameObjectCollection, BrickerGameManager gameManager,
                                 ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener,
-                                WindowController windowController, Vector2 windowDimensions) {
-        BrickStrategyFactory.gameObjects = gameObjectCollection;
-        BrickStrategyFactory.soundReader = soundReader;
-        BrickStrategyFactory.imageReader = imageReader;
+                                WindowController windowController, Vector2 windowDimensions,
+                                GraphicLifeCounter graphicLifeCounter, NumericLifeCounter numericLifeCounter) {
+        this.gameObjects = gameObjectCollection;
+        this.soundReader = soundReader;
+        this.imageReader = imageReader;
         this.inputListener = inputListener;
         this.windowController = windowController;
         this.windowDimensions = windowDimensions;
         this.gameManager = gameManager;
+        this.graphicLifeCounter = graphicLifeCounter;
+        this.numericLifeCounter = numericLifeCounter;
         removeBrickStrategy = new RemoveBrickStrategy(gameObjectCollection);
     }
 
-    public CollisionStrategy getStrategy(boolean isDoubleInstance) {
-        //TODO: check if we can add parameters (isDoubleInstance)
-        //TODO: Support 3 strategies
-        int rand;
-        if (isDoubleInstance) {
-            rand = random.nextInt(1, NUM_OF_STRATEGIES - 1);
-        } else {
-            rand = random.nextInt(0, NUM_OF_STRATEGIES);
+    public CollisionStrategy getStrategy() {
+        int rand = random.nextInt(NUM_OF_STRATEGIES);
+        switch (rand) {
+            case 0:
+                return new RemoveBrickStrategy(gameObjects);
+            case 1:
+                return new AddPaddleStrategy(removeBrickStrategy, imageReader, inputListener,
+                    windowDimensions);
+            case 2:
+                return new ChangeCameraStrategy(removeBrickStrategy, windowController, gameManager);
+            case 3:
+                return new PuckStrategy(removeBrickStrategy, imageReader, soundReader);
+            case 4:
+                return new ReturnLifeStrategy(removeBrickStrategy, imageReader, graphicLifeCounter,
+                numericLifeCounter);
+            case 5:
+                return new DoubleStrategy(getStrategyForDouble(NUM_OF_STRATEGIES-1),
+                    getStrategyForDouble( NUM_OF_STRATEGIES-2));
+            default:
+                return null;
         }
-        return switch (rand) {
-            case 0 -> new RemoveBrickStrategy(gameObjects);
-            case 1 -> new AddPaddleStrategy(removeBrickStrategy, imageReader, inputListener, windowDimensions);
-            case 2 -> new ChangeCameraStrategy(removeBrickStrategy, windowController, gameManager);
-            case 3 -> new PuckStrategy(removeBrickStrategy, imageReader, soundReader);
-            case 4 -> new AddGoodOrBadBotStrategy(removeBrickStrategy, imageReader, windowController);
-//            case 5 -> new DoubleStrategy(gameObjects, soundReader, imageReader, inputListener, windowController,
-//                    gameManager);
-            case 5 -> new DoubleStrategy();
-            default -> null;
-        };
+    }
+    
+    public CollisionStrategy getStrategyForDouble(int numOfStrategies) {
+        int rand = random.nextInt(numOfStrategies);
+        switch (rand) {
+            case 0:
+                return new AddPaddleStrategy(removeBrickStrategy, imageReader, inputListener,
+                    windowDimensions);
+            case 1:
+                return new ChangeCameraStrategy(removeBrickStrategy, windowController, gameManager);
+            case 2:
+                return new PuckStrategy(removeBrickStrategy, imageReader, soundReader);
+            case 3:
+                return new ReturnLifeStrategy(removeBrickStrategy, imageReader, graphicLifeCounter,
+                    numericLifeCounter);
+            case 4:
+                return new DoubleStrategy(getStrategyForDouble(NUM_OF_STRATEGIES-2),
+                                         getStrategyForDouble( NUM_OF_STRATEGIES-2));
+            default:
+                return null;
+        }
     }
 }

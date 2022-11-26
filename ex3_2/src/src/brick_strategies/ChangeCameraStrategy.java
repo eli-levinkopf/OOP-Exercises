@@ -8,6 +8,7 @@ import danogl.gui.WindowController;
 import danogl.util.Counter;
 import src.gameobjects.Ball;
 import src.gameobjects.BallCollisionCountdownAgent;
+import src.gameobjects.Puck;
 
 public class ChangeCameraStrategy extends RemoveBrickStrategyDecorator {
 
@@ -32,7 +33,7 @@ public class ChangeCameraStrategy extends RemoveBrickStrategyDecorator {
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj, Counter counter) {
         super.onCollision(thisObj, otherObj, counter);
-        if (gameManager.getCamera() == null){
+        if (gameManager.getCamera() == null && (otherObj instanceof Ball && !(otherObj instanceof Puck))){
             ballCollisionCountdownAgent = new BallCollisionCountdownAgent((Ball) otherObj, this,
                     NUM_BALL_COLLISIONS_TO_TURN_OFF);
             getGameObjectCollection().addGameObject(ballCollisionCountdownAgent);

@@ -13,20 +13,30 @@ public class Brick extends GameObject {
     private final Counter counter;
 
     /**
-     * Construct a new GameObject instance.
+     * Construct a new GameObject instance. This constructor extends the super's GameObject
+     * constructor, and also saves the strategy given.
      *
-     * @param topLeftCorner Position of the object, in window coordinates (pixels).
-     *                      Note that (0,0) is the top-left corner of the window.
-     * @param dimensions    Width and height in window coordinates.
-     * @param renderable    The renderable representing the object. Can be null, in which case
-     *                      the GameObject will not be rendered.
+     * @param topLeftCorner     the position in the window the top left corner of the object will be
+     *                          placed.
+     * @param dimensions        the 2d dimensions of the object on the screen.
+     * @param renderable        the image object to display on the screen.
+     * @param collisionStrategy the strategy that will be used when the brick breaks.
+     * @param counter           the number of active bricks in the game.
      */
-    public Brick(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, CollisionStrategy collisionStrategy, Counter counter) {
+    public Brick(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
+                 CollisionStrategy collisionStrategy, Counter counter) {
         super(topLeftCorner, dimensions, renderable);
         this.collisionStrategy = collisionStrategy;
         this.counter = counter;
     }
 
+    /**
+     * This is an override method for GameObject's onCollisionEnter. When the game detects a
+     * collision between the two objects, it activates the strategy of the brick.
+     *
+     * @param other the object this brick has collided with
+     * @param collision the attributes of the collision that occurred.
+     */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
