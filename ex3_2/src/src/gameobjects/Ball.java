@@ -12,6 +12,7 @@ import static src.BrickerGameManager.WINDOW_DIMENSION_X;
 
 public class Ball extends GameObject {
 
+    public static final int CENTER_FACTOR = 30;
     private final Sound collisionSound;
     private final Counter ballCounter = new Counter(0);
 
@@ -46,10 +47,10 @@ public class Ball extends GameObject {
     public void update(float deltaTime) {
         super.update(deltaTime);
         if (getCenter().x() > WINDOW_DIMENSION_X) {
-            setCenter(new Vector2(WINDOW_DIMENSION_X - 30, getCenter().y()));
+            setCenter(new Vector2(WINDOW_DIMENSION_X - CENTER_FACTOR, getCenter().y()));
         }
         if (getCenter().x() < 0) {
-            setCenter(new Vector2(30, getCenter().y()));
+            setCenter(new Vector2(CENTER_FACTOR, getCenter().y()));
         }
     }
 
@@ -63,7 +64,6 @@ public class Ball extends GameObject {
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        //TODO: instanceof?
         if (other instanceof Ball || other instanceof Brick || other instanceof Paddle) {
             ballCounter.increment();
         }

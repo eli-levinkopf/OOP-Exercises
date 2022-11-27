@@ -18,6 +18,9 @@ public class PuckStrategy extends RemoveBrickStrategyDecorator {
 
     private static final int NUM_OF_BALLS = 3;
     public static final String PATH_TO_MOCK_BALL_PNG = "assets/mockBall.png";
+    public static final float PUCK_BALL_SIZE_FACTOR = 1.3f;
+    public static final int NUM_OF_DIRECTIONS = 4;
+    public static final int ROTATE_BY_QUARTER = 90;
     private final ImageReader imageReader;
     private final SoundReader soundReader;
     private final Random random = new Random();
@@ -61,8 +64,9 @@ public class PuckStrategy extends RemoveBrickStrategyDecorator {
         Sound collisionSound = soundReader.readSound(PATH_TO_BLOP_WAV);
         for (int i = 0; i < NUM_OF_BALLS; i++) {
             GameObject mockBall = new Puck(thisObj.getCenter().add(new Vector2(BALL_DIMENSION / 2
-                    , BALL_DIMENSION / 2)), new Vector2(BALL_DIMENSION * 1.3f,
-                    BALL_DIMENSION * 1.3f), ballImage, collisionSound, getGameObjectCollection());
+                    , BALL_DIMENSION / 2)), new Vector2(BALL_DIMENSION * PUCK_BALL_SIZE_FACTOR,
+                    BALL_DIMENSION * PUCK_BALL_SIZE_FACTOR), ballImage, collisionSound,
+                    getGameObjectCollection());
             getGameObjectCollection().addGameObject(mockBall);
             setBall(otherObj, mockBall);
         }
@@ -75,7 +79,7 @@ public class PuckStrategy extends RemoveBrickStrategyDecorator {
      * @param mockBall reference to the new puck ball.
      */
     private void setBall(GameObject mainBall, GameObject mockBall) {
-        float degrees = (float) random.nextInt(4) * 90;
+        float degrees = (float) random.nextInt(NUM_OF_DIRECTIONS) * ROTATE_BY_QUARTER;
         Vector2 ballVelocity = mainBall.getVelocity();
         ballVelocity = ballVelocity.rotated(degrees);
         mockBall.setVelocity(ballVelocity);

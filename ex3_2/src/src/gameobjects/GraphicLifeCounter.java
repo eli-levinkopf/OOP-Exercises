@@ -10,6 +10,7 @@ import src.BrickerGameManager;
 
 public class GraphicLifeCounter extends GameObject {
 
+    public static final int X_DIR = 0;
     private Vector2 widgetTopLeftCorner;
     private final Renderable widgetRenderable;
     private final Counter livesCounter;
@@ -51,7 +52,8 @@ public class GraphicLifeCounter extends GameObject {
             livesWidgets[i] = heart;
             numOfWidgets++;
             this.widgetTopLeftCorner =
-                    this.widgetTopLeftCorner.add(new Vector2(BrickerGameManager.WIDGET_DIMENSION + BrickerGameManager.SPACE_BETWEEN_WIDGETS, 0));
+                    this.widgetTopLeftCorner.add(new Vector2(BrickerGameManager.WIDGET_DIMENSION
+                            + BrickerGameManager.SPACE_BETWEEN_WIDGETS, X_DIR));
         }
     }
 
@@ -74,7 +76,8 @@ public class GraphicLifeCounter extends GameObject {
                     BrickerGameManager.LIFE_WIDGETS_LAYER);
             numOfWidgets--;
             widgetTopLeftCorner =
-                    widgetTopLeftCorner.subtract(new Vector2(BrickerGameManager.WIDGET_DIMENSION + BrickerGameManager.SPACE_BETWEEN_WIDGETS, 0));
+                    widgetTopLeftCorner.subtract(new Vector2(BrickerGameManager.WIDGET_DIMENSION
+                            + BrickerGameManager.SPACE_BETWEEN_WIDGETS, X_DIR));
         }
     }
 
@@ -90,7 +93,8 @@ public class GraphicLifeCounter extends GameObject {
             livesWidgets[livesCounter.value()] = heart;
             numOfWidgets++;
             widgetTopLeftCorner =
-                    widgetTopLeftCorner.add(new Vector2(BrickerGameManager.WIDGET_DIMENSION + BrickerGameManager.SPACE_BETWEEN_WIDGETS, 0));
+                    widgetTopLeftCorner.add(new Vector2(BrickerGameManager.WIDGET_DIMENSION
+                            + BrickerGameManager.SPACE_BETWEEN_WIDGETS, X_DIR));
         }
     }
 }

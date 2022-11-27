@@ -16,6 +16,7 @@ public class AddPaddleStrategy extends RemoveBrickStrategyDecorator {
 
     public static final int NUM_COLLISIONS_TO_DISAPPEAR = 3;
     private static final String PATH_TO_SECOND_PADDLE_PNG = "assets/botGood.png";
+    public static final float HALF = .5f;
     private final ImageReader imageReader;
     private final UserInputListener inputListener;
     private final Vector2 windowDimensions;
@@ -65,7 +66,7 @@ public class AddPaddleStrategy extends RemoveBrickStrategyDecorator {
                 PADDLE_DIMENSION_Y), paddleImage, inputListener, windowDimensions,
                 getGameObjectCollection(), MIN_DISTANCE_FROM_SCREEN_EDGE,
                 NUM_COLLISIONS_TO_DISAPPEAR);
-        mockPaddle.setCenter(new Vector2(thisObj.getCenter().x(), windowDimensions.y() * .5f));
+        mockPaddle.setCenter(new Vector2(thisObj.getCenter().x(), windowDimensions.y() * HALF));
         getGameObjectCollection().addGameObject(mockPaddle);
     }
 }

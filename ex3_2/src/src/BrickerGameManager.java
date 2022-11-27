@@ -36,6 +36,9 @@ public class BrickerGameManager extends GameManager {
     public static final String PLAY_AGAIN_MSG = "Play again?";
     public static final String BRICKER = "Bricker";
     public static final String EMPTY_PROMPT = "";
+    public static final float MAIN_BALL_MULT_FACTOR = 0.5f;
+    public static final int TWO_FRAMES = 2;
+    public static final int ONE_DIR = 0;
     public static boolean mockPaddle = false;
     public static final int MAX_NUM_OF_LIVES = 4;
 
@@ -103,7 +106,9 @@ public class BrickerGameManager extends GameManager {
      */
     private void addNumericLifeCounter() {
         numericLifeCounter = new NumericLifeCounter(livesCounter, new Vector2(FRAME_THICKNESS,
-                windowDimensions.y() - FRAME_THICKNESS - WIDGET_DIMENSION - SPACE_BETWEEN_WIDGETS - WIDGET_DIMENSION), new Vector2(WIDGET_DIMENSION, WIDGET_DIMENSION), gameObjectsCollection);
+                windowDimensions.y() - FRAME_THICKNESS - WIDGET_DIMENSION -
+                        SPACE_BETWEEN_WIDGETS - WIDGET_DIMENSION),
+                new Vector2(WIDGET_DIMENSION, WIDGET_DIMENSION), gameObjectsCollection);
         gameObjects().addGameObject(numericLifeCounter, LIFE_WIDGETS_LAYER);
     }
 
@@ -149,7 +154,8 @@ public class BrickerGameManager extends GameManager {
             wPressed = true;
             prompt += WIN_MSG;
         }
-        if (!prompt.isEmpty() && (livesCounter.value() == 0 || bricksCounter.value() == 0) || wPressed) {
+        if (!prompt.isEmpty() && (livesCounter.value() == 0 || bricksCounter.value() == 0)
+                || wPressed) {
             prompt += PLAY_AGAIN_MSG;
             if (windowController.openYesNoDialog(prompt)) {
                 livesCounter.reset();
@@ -169,7 +175,8 @@ public class BrickerGameManager extends GameManager {
     private void addBricks(ImageReader imageReader, BrickStrategyFactory brickStrategyFactory) {
         Renderable brickImage = imageReader.readImage(PATH_TO_BRICK_PNG, false);
         float brickLength =
-                (windowDimensions.x() - (float) FRAME_THICKNESS * 2 - (float) NUM_OF_ROWS) / (float) NUM_OF_ROWS;
+                (windowDimensions.x() - (float) FRAME_THICKNESS * TWO_FRAMES - (float) NUM_OF_ROWS)
+                        / (float) NUM_OF_ROWS;
         Vector2 brickDimensions = new Vector2(brickLength, BRICK_THICKNESS);
         Vector2 start = Vector2.ZERO.add(new Vector2(FRAME_THICKNESS, FRAME_THICKNESS));
         for (int i = 0; i < NUM_OF_ROWS; i++) {
@@ -178,7 +185,7 @@ public class BrickerGameManager extends GameManager {
                         brickStrategyFactory.getStrategy(), bricksCounter);
                 this.gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
                 bricksCounter.increment();
-                start = start.add(new Vector2(0, BRICK_THICKNESS + SPACE_BETWEEN_BRICKS));
+                start = start.add(new Vector2(ONE_DIR, BRICK_THICKNESS + SPACE_BETWEEN_BRICKS));
             }
             start = start.add(new Vector2(brickLength + SPACE_BETWEEN_BRICKS,
                     -NUM_OF_BRICKS_IN_ROW * (BRICK_THICKNESS + SPACE_BETWEEN_BRICKS)));
@@ -203,7 +210,7 @@ public class BrickerGameManager extends GameManager {
     private void addFrame() {
         gameObjects().addGameObject(new GameObject(Vector2.ZERO, new Vector2(FRAME_THICKNESS,
                 windowDimensions.y()), null));
-        gameObjects().addGameObject(new GameObject(new Vector2(windowDimensions.x(), 0),
+        gameObjects().addGameObject(new GameObject(new Vector2(windowDimensions.x(), ONE_DIR),
                 new Vector2(FRAME_THICKNESS, windowDimensions.y()), null));
         gameObjects().addGameObject(new GameObject(Vector2.ZERO, new Vector2(windowDimensions.x()
                 , FRAME_THICKNESS), null));
@@ -220,7 +227,8 @@ public class BrickerGameManager extends GameManager {
         Paddle paddle = new Paddle(Vector2.ZERO, new Vector2(PADDLE_DIMENSION_X,
                 PADDLE_DIMENSION_Y), paddleImage, inputListener, windowDimensions,
                 MIN_DISTANCE_FROM_SCREEN_EDGE);
-        paddle.setCenter(new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - 25));
+        paddle.setCenter(new Vector2(windowDimensions.x() / TWO_FRAMES,
+                (int) windowDimensions.y() - 25));
         this.gameObjects().addGameObject(paddle);
     }
 
@@ -250,7 +258,7 @@ public class BrickerGameManager extends GameManager {
             ballVelocityX *= -1;
         }
         mainBall.setVelocity(new Vector2(ballVelocityX, BALL_SPEED));
-        mainBall.setCenter(windowDimensions.mult(0.5f));
+        mainBall.setCenter(windowDimensions.mult(MAIN_BALL_MULT_FACTOR));
     }
 
     /**

@@ -13,6 +13,8 @@ import static src.BrickerGameManager.PATH_TO_HEART_PNG;
 public class ReturnLifeStrategy extends RemoveBrickStrategyDecorator {
 
 
+    public static final int HEART_VELOCITY = 100;
+    public static final int Y_DIR = 0;
     private final ImageReader imageReader;
     private final GraphicLifeCounter graphicLifeCounter;
     private final NumericLifeCounter numericLifeCounter;
@@ -61,6 +63,6 @@ public class ReturnLifeStrategy extends RemoveBrickStrategyDecorator {
                         BrickerGameManager.WIDGET_DIMENSION), heartImage,
                 getGameObjectCollection(), graphicLifeCounter, numericLifeCounter);
         getGameObjectCollection().addGameObject(heart);
-        heart.setVelocity(new Vector2(0, 100));
+        heart.setVelocity(new Vector2(Y_DIR, HEART_VELOCITY));
     }
 }

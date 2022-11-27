@@ -40,7 +40,8 @@ public class Puck extends Ball {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        if (getCenter().x() > BrickerGameManager.WINDOW_DIMENSION_X || getCenter().y() > BrickerGameManager.WINDOW_DIMENSION_Y) {
+        if (getCenter().x() > BrickerGameManager.WINDOW_DIMENSION_X ||
+                getCenter().y() > BrickerGameManager.WINDOW_DIMENSION_Y) {
             gameObjectCollection.removeGameObject(this);
         }
     }

@@ -13,6 +13,7 @@ import src.gameobjects.Puck;
 public class ChangeCameraStrategy extends RemoveBrickStrategyDecorator {
 
     public static final int NUM_BALL_COLLISIONS_TO_TURN_OFF = 4;
+    public static final float MULT_FACTOR = 1.2f;
     private final BrickerGameManager gameManager;
     private final WindowController windowController;
     private BallCollisionCountdownAgent ballCollisionCountdownAgent;
@@ -46,7 +47,7 @@ public class ChangeCameraStrategy extends RemoveBrickStrategyDecorator {
                     NUM_BALL_COLLISIONS_TO_TURN_OFF);
             getGameObjectCollection().addGameObject(ballCollisionCountdownAgent);
             gameManager.setCamera(new Camera(otherObj, Vector2.ZERO,
-                    windowController.getWindowDimensions().mult(1.2f),
+                    windowController.getWindowDimensions().mult(MULT_FACTOR),
                     windowController.getWindowDimensions()));
         }
     }
