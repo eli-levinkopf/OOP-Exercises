@@ -9,7 +9,7 @@ import danogl.util.Counter;
 import danogl.util.Vector2;
 import src.BrickerGameManager;
 
-public class MockPaddle extends Paddle{
+public class MockPaddle extends Paddle {
 
     private final Counter counter = new Counter();
     private final GameObjectCollection gameObjectCollection;
@@ -27,18 +27,28 @@ public class MockPaddle extends Paddle{
      * @param windowDimensions    dimensions of game window.
      * @param minDistanceFromEdge border for paddle movement.
      */
-    public MockPaddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, UserInputListener inputListener,
-                      Vector2 windowDimensions, GameObjectCollection gameObjectCollection, int minDistanceFromEdge,
+    public MockPaddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
+                      UserInputListener inputListener, Vector2 windowDimensions,
+                      GameObjectCollection gameObjectCollection, int minDistanceFromEdge,
                       int numCollisionsToDisappear) {
-        super(topLeftCorner, dimensions, renderable, inputListener, windowDimensions, minDistanceFromEdge);
+        super(topLeftCorner, dimensions, renderable, inputListener, windowDimensions,
+                minDistanceFromEdge);
         this.gameObjectCollection = gameObjectCollection;
         this.numCollisionsToDisappear = numCollisionsToDisappear;
     }
 
+    /**
+     * Called on the first frame of a collision.
+     *
+     * @param other     The GameObject with which a collision occurred.
+     * @param collision Information regarding this collision.
+     *                  A reasonable elastic behavior can be achieved with:
+     *                  setVelocity(getVelocity().flipped(collision.getNormal()));
+     */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        if (other instanceof Ball){
+        if (other instanceof Ball) {
             counter.increment();
         }
         if (counter.value() == numCollisionsToDisappear) {

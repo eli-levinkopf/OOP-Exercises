@@ -18,31 +18,43 @@ public class ChangeCameraStrategy extends RemoveBrickStrategyDecorator {
     private BallCollisionCountdownAgent ballCollisionCountdownAgent;
 
     /**
-     * Abstract decorator to add functionality to the remove brick strategy, following the decorator pattern.
+     * Abstract decorator to add functionality to the remove brick strategy, following the
+     * decorator pattern.
      * All strategy decorators should inherit from this class.
      *
      * @param toBeDecorated Collision strategy object to be decorated.
      */
-    public ChangeCameraStrategy(CollisionStrategy toBeDecorated, WindowController windowController,
-                                BrickerGameManager gameManager) {
+    public ChangeCameraStrategy(CollisionStrategy toBeDecorated,
+                                WindowController windowController, BrickerGameManager gameManager) {
         super(toBeDecorated);
         this.windowController = windowController;
         this.gameManager = gameManager;
     }
 
+    /**
+     * Called when brick collided with other object.
+     *
+     * @param thisObj  reference to Brick object.
+     * @param otherObj reference to other type of object that collided with brick.
+     * @param counter  global brick counter.
+     */
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj, Counter counter) {
         super.onCollision(thisObj, otherObj, counter);
-        if (gameManager.getCamera() == null && (otherObj instanceof Ball && !(otherObj instanceof Puck))){
+        if (gameManager.getCamera() == null && (otherObj instanceof Ball && !(otherObj instanceof Puck))) {
             ballCollisionCountdownAgent = new BallCollisionCountdownAgent((Ball) otherObj, this,
                     NUM_BALL_COLLISIONS_TO_TURN_OFF);
             getGameObjectCollection().addGameObject(ballCollisionCountdownAgent);
             gameManager.setCamera(new Camera(otherObj, Vector2.ZERO,
-                    windowController.getWindowDimensions().mult(1.2f), windowController.getWindowDimensions()));
+                    windowController.getWindowDimensions().mult(1.2f),
+                    windowController.getWindowDimensions()));
         }
     }
 
-    public void turnOffCameraChange(){
+    /**
+     * return the camera to defuel state.
+     */
+    public void turnOffCameraChange() {
         gameManager.setCamera(null);
         getGameObjectCollection().removeGameObject(ballCollisionCountdownAgent);
     }

@@ -66,6 +66,6 @@ public class Paddle extends GameObject {
                     getDimensions().x() - SAFE_SPACE_FROM_EDGE, getTopLeftCorner().y()));
         }
     }
-    
+
 
 }

@@ -23,37 +23,59 @@ public class PuckStrategy extends RemoveBrickStrategyDecorator {
     private final Random random = new Random();
 
     /**
-     * Abstract decorator to add functionality to the remove brick strategy, following the decorator pattern.
-     * All strategy decorators should inherit from this class.
+     * Creates a new instance of a PuckStrategy.
      *
      * @param toBeDecorated Collision strategy object to be decorated.
+     * @param imageReader   an object used to read images from the disc and render them.
+     * @param soundReader   reference to an object used to read sound files from the disc and
+     *                      render them.
      */
-    public PuckStrategy(CollisionStrategy toBeDecorated, ImageReader imageReader, SoundReader soundReader) {
+    public PuckStrategy(CollisionStrategy toBeDecorated, ImageReader imageReader,
+                        SoundReader soundReader) {
         super(toBeDecorated);
         this.imageReader = imageReader;
         this.soundReader = soundReader;
     }
 
+    /**
+     * Called when brick collided with other object.
+     *
+     * @param thisObj  reference to Brick object.
+     * @param otherObj reference to other type of object that collided with brick.
+     * @param counter  global brick counter.
+     */
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj, Counter counter) {
         super.onCollision(thisObj, otherObj, counter);
         add3Balls(thisObj, otherObj);
     }
 
+    /**
+     * Adds 3 new puck balls.
+     *
+     * @param thisObj  reference to Brick object.
+     * @param otherObj reference to other type of object that collided with brick.
+     */
     private void add3Balls(GameObject thisObj, GameObject otherObj) {
         Renderable ballImage = imageReader.readImage(PATH_TO_MOCK_BALL_PNG, true);
         Sound collisionSound = soundReader.readSound(PATH_TO_BLOP_WAV);
         for (int i = 0; i < NUM_OF_BALLS; i++) {
-            GameObject mockBall = new Puck(thisObj.getCenter().add(new Vector2(BALL_DIMENSION / 2, BALL_DIMENSION / 2)),
-                    new Vector2(BALL_DIMENSION*1.3f, BALL_DIMENSION*1.3f), ballImage,
-                    collisionSound, getGameObjectCollection());
+            GameObject mockBall = new Puck(thisObj.getCenter().add(new Vector2(BALL_DIMENSION / 2
+                    , BALL_DIMENSION / 2)), new Vector2(BALL_DIMENSION * 1.3f,
+                    BALL_DIMENSION * 1.3f), ballImage, collisionSound, getGameObjectCollection());
             getGameObjectCollection().addGameObject(mockBall);
             setBall(otherObj, mockBall);
         }
     }
 
+    /**
+     * Initializes the new puck ball.
+     *
+     * @param mainBall reference to the main ball.
+     * @param mockBall reference to the new puck ball.
+     */
     private void setBall(GameObject mainBall, GameObject mockBall) {
-        float degrees = (float)random.nextInt(4)*90;
+        float degrees = (float) random.nextInt(4) * 90;
         Vector2 ballVelocity = mainBall.getVelocity();
         ballVelocity = ballVelocity.rotated(degrees);
         mockBall.setVelocity(ballVelocity);

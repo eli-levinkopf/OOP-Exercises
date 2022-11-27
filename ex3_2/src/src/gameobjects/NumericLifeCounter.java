@@ -23,8 +23,9 @@ public class NumericLifeCounter extends GameObject {
      */
     public NumericLifeCounter(Counter livesCounter, Vector2 topLeftCorner, Vector2 dimensions,
                               GameObjectCollection gameObjectCollection) {
-        super(topLeftCorner, dimensions, new TextRenderable(Integer.toString(livesCounter.value()),
-                Font.DIALOG_INPUT, true, true));
+        super(topLeftCorner, dimensions,
+                new TextRenderable(Integer.toString(livesCounter.value()), Font.DIALOG_INPUT,
+                        true, true));
         this.textRenderable = (TextRenderable) super.renderer().getRenderable();
         this.livesCounter = livesCounter;
     }
@@ -32,6 +33,7 @@ public class NumericLifeCounter extends GameObject {
     /**
      * This method is overwritten from GameObject. It sets the string value of the text object to
      * the number of current lives left.
+     *
      * @param deltaTime The time elapsed, in seconds, since the last frame. Can
      *                  be used to determine a new position/velocity by multiplying
      *                  this delta with the velocity/acceleration respectively
@@ -60,8 +62,8 @@ public class NumericLifeCounter extends GameObject {
     /**
      * Adds a new life to the game if number of lives is not greater than MAX_NUM_OF_LIVES.
      */
-    public void addNumericLife(){
-        if (livesCounter.value() < BrickerGameManager.MAX_NUM_OF_LIVES){
+    public void addNumericLife() {
+        if (livesCounter.value() < BrickerGameManager.MAX_NUM_OF_LIVES) {
             livesCounter.increment();
         }
     }

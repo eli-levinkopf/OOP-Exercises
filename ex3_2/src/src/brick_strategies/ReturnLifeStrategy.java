@@ -17,9 +17,17 @@ public class ReturnLifeStrategy extends RemoveBrickStrategyDecorator {
     private final GraphicLifeCounter graphicLifeCounter;
     private final NumericLifeCounter numericLifeCounter;
 
-
+    /**
+     * Creates a new instance of ReturnLifeStrategy.
+     *
+     * @param toBeDecorated      Collision strategy object to be decorated.
+     * @param imageReader        an object used to read images from the disc and render them.
+     * @param graphicLifeCounter reference to graphicLifeCounter.
+     * @param numericLifeCounter reference to numericLifeCounter.
+     */
     public ReturnLifeStrategy(CollisionStrategy toBeDecorated, ImageReader imageReader,
-                              GraphicLifeCounter graphicLifeCounter, NumericLifeCounter numericLifeCounter) {
+                              GraphicLifeCounter graphicLifeCounter,
+                              NumericLifeCounter numericLifeCounter) {
         super(toBeDecorated);
         this.imageReader = imageReader;
         this.graphicLifeCounter = graphicLifeCounter;
@@ -28,9 +36,11 @@ public class ReturnLifeStrategy extends RemoveBrickStrategyDecorator {
 
 
     /**
-     * @param thisObj  brick
-     * @param otherObj ball
-     * @param counter
+     * Called when brick collided with other object.
+     *
+     * @param thisObj  reference to Brick object.
+     * @param otherObj reference to other type of object that collided with brick.
+     * @param counter  global brick counter.
      */
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj, Counter counter) {
@@ -38,6 +48,12 @@ public class ReturnLifeStrategy extends RemoveBrickStrategyDecorator {
         addHeart(thisObj, otherObj);
     }
 
+    /**
+     * Adds a new puck heart and set it velocity.
+     *
+     * @param thisObj  reference to Brick object.
+     * @param otherObj reference to other type of object that collided with brick.
+     */
     private void addHeart(GameObject thisObj, GameObject otherObj) {
         Renderable heartImage = imageReader.readImage(PATH_TO_HEART_PNG, true);
         GameObject heart = new FlyingHeart(thisObj.getCenter(),
@@ -45,6 +61,6 @@ public class ReturnLifeStrategy extends RemoveBrickStrategyDecorator {
                         BrickerGameManager.WIDGET_DIMENSION), heartImage,
                 getGameObjectCollection(), graphicLifeCounter, numericLifeCounter);
         getGameObjectCollection().addGameObject(heart);
-        heart.setVelocity(new Vector2 (0, 100));
+        heart.setVelocity(new Vector2(0, 100));
     }
 }

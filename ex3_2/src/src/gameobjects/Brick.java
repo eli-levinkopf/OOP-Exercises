@@ -34,7 +34,7 @@ public class Brick extends GameObject {
      * This is an override method for GameObject's onCollisionEnter. When the game detects a
      * collision between the two objects, it activates the strategy of the brick.
      *
-     * @param other the object this brick has collided with
+     * @param other     the object this brick has collided with
      * @param collision the attributes of the collision that occurred.
      */
     @Override

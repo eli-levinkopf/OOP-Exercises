@@ -32,33 +32,33 @@ public class GraphicLifeCounter extends GameObject {
      * @param numOfLives            - global setting of number of lives a player will have in a
      *                              game.
      */
-    public GraphicLifeCounter(Vector2 widgetTopLeftCorner,
-                              Counter livesCounter, Renderable widgetRenderable,
+    public GraphicLifeCounter(Vector2 widgetTopLeftCorner, Counter livesCounter,
+                              Renderable widgetRenderable,
                               GameObjectCollection gameObjectsCollection, int numOfLives) {
         super(Vector2.ZERO, Vector2.ZERO, null);
         this.widgetTopLeftCorner = widgetTopLeftCorner;
         this.widgetRenderable = widgetRenderable;
         this.livesCounter = livesCounter;
         this.gameObjectsCollection = gameObjectsCollection;
-        livesWidgets = new GameObject[numOfLives+1];
+        livesWidgets = new GameObject[numOfLives + 1];
 
         GameObject heart;
         for (int i = 0; i < numOfLives; i++) {
             heart = new GameObject(this.widgetTopLeftCorner,
-                    new Vector2(BrickerGameManager.WIDGET_DIMENSION, BrickerGameManager.WIDGET_DIMENSION),
-                    widgetRenderable);
+                    new Vector2(BrickerGameManager.WIDGET_DIMENSION,
+                            BrickerGameManager.WIDGET_DIMENSION), widgetRenderable);
             gameObjectsCollection.addGameObject(heart, BrickerGameManager.LIFE_WIDGETS_LAYER);
             livesWidgets[i] = heart;
             numOfWidgets++;
-            this.widgetTopLeftCorner = this.widgetTopLeftCorner.add(new Vector2(
-                    BrickerGameManager.WIDGET_DIMENSION +
-                            BrickerGameManager.SPACE_BETWEEN_WIDGETS, 0));
+            this.widgetTopLeftCorner =
+                    this.widgetTopLeftCorner.add(new Vector2(BrickerGameManager.WIDGET_DIMENSION + BrickerGameManager.SPACE_BETWEEN_WIDGETS, 0));
         }
     }
 
     /**
      * This method is overwritten from GameObject It removes hearts from the screen if there are
      * more hearts than there are lives left.
+     *
      * @param deltaTime The time elapsed, in seconds, since the last frame. Can
      *                  be used to determine a new position/velocity by multiplying
      *                  this delta with the velocity/acceleration respectively
@@ -73,9 +73,8 @@ public class GraphicLifeCounter extends GameObject {
             gameObjectsCollection.removeGameObject(livesWidgets[livesCounter.value()],
                     BrickerGameManager.LIFE_WIDGETS_LAYER);
             numOfWidgets--;
-            widgetTopLeftCorner = widgetTopLeftCorner.subtract(
-                    new Vector2(BrickerGameManager.WIDGET_DIMENSION +
-                            BrickerGameManager.SPACE_BETWEEN_WIDGETS, 0));
+            widgetTopLeftCorner =
+                    widgetTopLeftCorner.subtract(new Vector2(BrickerGameManager.WIDGET_DIMENSION + BrickerGameManager.SPACE_BETWEEN_WIDGETS, 0));
         }
     }
 
@@ -83,16 +82,15 @@ public class GraphicLifeCounter extends GameObject {
      * Adds a new graphic life to the game if number of lives is not greater than MAX_NUM_OF_LIVES.
      */
     public void addGraphicLife() {
-        if (livesCounter.value() <BrickerGameManager. MAX_NUM_OF_LIVES){
+        if (livesCounter.value() < BrickerGameManager.MAX_NUM_OF_LIVES) {
             GameObject heart = new GameObject(widgetTopLeftCorner,
                     new Vector2(BrickerGameManager.WIDGET_DIMENSION,
                             BrickerGameManager.WIDGET_DIMENSION), widgetRenderable);
             gameObjectsCollection.addGameObject(heart, BrickerGameManager.LIFE_WIDGETS_LAYER);
             livesWidgets[livesCounter.value()] = heart;
             numOfWidgets++;
-            widgetTopLeftCorner = widgetTopLeftCorner.add(new Vector2(
-                    BrickerGameManager.WIDGET_DIMENSION +
-                            BrickerGameManager.SPACE_BETWEEN_WIDGETS, 0));
+            widgetTopLeftCorner =
+                    widgetTopLeftCorner.add(new Vector2(BrickerGameManager.WIDGET_DIMENSION + BrickerGameManager.SPACE_BETWEEN_WIDGETS, 0));
         }
     }
 }
