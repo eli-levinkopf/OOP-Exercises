@@ -3,15 +3,44 @@ eli.levinkopf
 
 External Libraries: DanoGameLab https://moodle2.cs.huji.ac.il/nu21/mod/folder/view.php?id=202013
 
-alotStudyTime:
-    I.  I used a greedy algorithm approach for solving this problem. That is, in each iteration take the next shortest
-        task with the next shortest timeSlot available for it. We saw in Algo that the greedy approach achieves the
-        optimal solution.
-    II. In the while loop the algorithm do a constant work and the number of loops is min(m,n) where m is the number
-        of tasks and n is the number of timeSlots. Time complexity: O(min(m,n)).
+Files description:
+AddPaddleStrategy: A class for strategy that extends removePaddleStrategyDecorator and adds a new paddle when the tha
+ball collides with a brick.
+BrickStrategyFactory: A class for a factory that randomly creates a new instance of a strategy.
+collisionStrategy: An interface for a general type for brick strategies, part of decorator pattern implementation. All
+brick strategies implement this interface.
+DoubleStrategy: A class for double strategy (implement collisionStrategy). this strategy have 2 other strategies.
+puckStrategy: A class for strategy that extends removePaddleStrategyDecorator. This strategy creates 3 puck balls when
+the ball collides with a brick.
+RemoveBrickStrategy: A class for a strategy that implement collisionStrategy. This strategy removes the brick when it
+collides with a brick.
+RemoveBrickDecorator: A decorator that decorate the other strategies and remove the brick when it collides with a brick.
+ReturnLifeStrategy: A class for a strategy that extends removePaddleStrategyDecorator. This strategy creates a new heart
+when the ball collides with a brick and get to the player a chance to get one more life.
+Ball: A class that creates an instance of ball.
+BallCollisionCountdownAgent: A class that creates an object of this class is instantiated on collision of ball with a
+brick with a change camera strategy. It checks ball's collision counter every frame, and once it finds the ball has
+collided countDownValue times since instantiation, it calls the strategy to reset the camera to normal.
+Brick: A class that creates an instance of brick.
+FlyingHeart: A class that creates an instance of flying heart. This heart disappears when the ball collides with it or
+when it get to the and of the window dimensions.
+GraphicLifeCounter: A class that creates an instance of graphic life.
+MockPaddle: A class that creates an instance of mock paddle. This mock paddle disappears after it collides with 3 other
+objects.
+NumericLifeCounter: A class that creates an instance of numeric life counter.
+Paddle: A class that creates an instance of a paddle.
+Puck: A class that creates an instance of mock ball. This mock ball disappears when it get to the end of the window
+dimensions.
+BrickGameManager: A class that initialize the game and run it.
 
-minLeap:
-    I.
+Design:
+For every game object and for every strategy has a unique class. I created an interface CollisionStrategy that
+every strategy have to implement. I also created a decorator that decorate the basic strategy - RemoveBrick and adds the
+special behavior of the strategy. It is better than deep inheritance because all strategies also remove the brick when
+it collides with a ball.
 
-explanation for solution.numTrees:
-    https://leetcode.com/problems/unique-binary-search-trees/discuss/31666/DP-Solution-in-6-lines-with-explanation.-F(i-n)-G(i-1)-*-G(n-i)
+I limited the double behavior to three behaviors - in the first time, if the strategy is a double strategy, so it gets
+2 other strategies such that the first one chosen from all strategies except the basic strategy (RemoveBrickStrategy)
+and the second one chosen from all strategies except the basic strategy (RemoveBrickStrategy) and the double
+strategy (DoubleStrategy). this solution supports in extension of the number of behaviors by change only the
+DoubleStrategy and the BrickStrategyFactory classes.
