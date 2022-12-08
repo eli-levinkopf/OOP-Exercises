@@ -11,12 +11,15 @@ import java.util.function.BiFunction;
 class ImageIterableProperty<T> implements Iterable<T> {
     private final Image img;
     private final BiFunction<Integer, Integer, T> propertySupplier;
+    private final int addToX;
+    private final int addToY;
 
-    public ImageIterableProperty(
-            Image img,
-            BiFunction<Integer, Integer, T> propertySupplier) {
+    public ImageIterableProperty(Image img, BiFunction<Integer, Integer, T> propertySupplier,
+                                 int addToX, int addToY) {
         this.img = img;
         this.propertySupplier = propertySupplier;
+        this.addToX = addToX;
+        this.addToY = addToY;
     }
 
     @Override
@@ -34,13 +37,14 @@ class ImageIterableProperty<T> implements Iterable<T> {
                 if (!hasNext())
                     throw new NoSuchElementException();
                 var next = propertySupplier.apply(x, y);
-                x += 1;
+                x += addToX;
                 if (x >= img.getWidth()) {
                     x = 0;
-                    y += 1;
+                    y += addToY;
                 }
                 return next;
             }
         };
     }
+
 }

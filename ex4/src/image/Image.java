@@ -33,6 +33,12 @@ public interface Image {
      */
     default Iterable<Color> pixels() {
         return new ImageIterableProperty<>(
-                this, this::getPixel);
+                this, this::getPixel, 1, 1);
     }
+
+    default Iterable<Image> breakToSquareSubImage(int sizeOfSubImage) {
+        return new ImageIterableProperty<>(this, (x, y)->new BreakImage(this, x, y, sizeOfSubImage,
+                sizeOfSubImage), sizeOfSubImage, sizeOfSubImage);
+    }
+
 }
