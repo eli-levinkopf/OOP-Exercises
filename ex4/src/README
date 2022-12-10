@@ -1,0 +1,10 @@
+eli.levinkopf
+205821879
+
+נשנה את האיטרטור ImageIterableProperty כך שיוכל לקבל בקונסטרקטור את הערכים addToX addToY
+כאשר בפונקציה pixels נשלח addToX = addToY = 1.
+הוספתי לממשק Image את המתודה breakToSquareSubImage המחזירה איטרטור על תת התמונות.
+לצורך כך מימשתי מחלקה חדשה בשם BreakImage המממשת את Image ודורסת את השיטות equals, hashCode של Object.
+
+
+
