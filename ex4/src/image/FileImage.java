@@ -12,6 +12,7 @@ import java.io.IOException;
  */
 class FileImage implements Image {
     private static final Color DEFAULT_COLOR = Color.WHITE;
+    public static final float PAD_FACTOR = 2.0f;
 
     private final Color[][] pixelArray;
     private final int width;
@@ -27,8 +28,8 @@ class FileImage implements Image {
 
         pixelArray = new Color[height][width];
 
-        float padWidthX = (width - origWidth) / 2.0f;
-        float padWidthY = (height - origHeight) / 2.0f;
+        float padWidthX = (width - origWidth) / PAD_FACTOR;
+        float padWidthY = (height - origHeight) / PAD_FACTOR;
 
         // zero padding the original image.
         for (int y = 0; y < height; y++) { // if pixel pixelArray[x][y] belongs to the background
@@ -62,9 +63,5 @@ class FileImage implements Image {
     public Color getPixel(int x, int y) {
         return  pixelArray[y][x];
     }
-
-//    public Iterable<Image> breakImage(int sizeOfSubImage){
-//        return Image.breakToSquareSubImage(sizeOfSubImage);
-//    }
 
 }

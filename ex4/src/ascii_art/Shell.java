@@ -1,6 +1,7 @@
 package ascii_art;
 
 import ascii_art.img_to_char.BrightnessImgCharMatcher;
+import ascii_art.img_to_char.tmp;
 import ascii_output.ConsoleAsciiOutput;
 import ascii_output.HtmlAsciiOutput;
 import image.Image;
@@ -47,27 +48,48 @@ public class Shell {
     public static final int CHANGE_RESOLUTION_FACTOR = 2;
 
     private boolean console = false;
-    private final Image image;
     private final Scanner scanner = new Scanner(System.in);
     private final Set<Character> characterDatabase = new HashSet<>();
 
     private final int minCharsInRow;
     private final int maxCharsInRow;
     private int charsInRow;
+    private final BrightnessImgCharMatcher charMatcher;
+    private final HtmlAsciiOutput htmlAsciiOutput;
+    private final ConsoleAsciiOutput consoleAsciiOutput;
 
+    private final tmp t;
+
+
+    /**
+     * Creates a new instance of Shell.
+     * @param image image to work with.
+     */
     public Shell(Image image) {
-        this.image = image;
         minCharsInRow = Math.max(1, image.getWidth() / image.getHeight());
         maxCharsInRow = image.getWidth() / MIN_PIXELS_PER_CHAR;
         charsInRow = Math.max(Math.min(INITIAL_CHARS_IN_ROW, maxCharsInRow), minCharsInRow);
+        charMatcher = new BrightnessImgCharMatcher(image, FONT);
+        consoleAsciiOutput = new ConsoleAsciiOutput();
+        htmlAsciiOutput = new HtmlAsciiOutput(OUTPUT_FILENAME, FONT);
         databaseInitialization();
+
+         t = new tmp(image, FONT);
+
     }
 
+    /**
+     * Initialize the database with the characters 0-9.
+     */
     private void databaseInitialization() {
         addCharactersToDatabase(FIRST_NUM, LAST_NUM);
 
     }
 
+    /**
+     * Manages the all program. Gets input from user and exports the results to the output file
+     * (html) or to the console (according to the user's choice).
+     */
     public void run() {
         System.out.print(GET_INPUT);
         String command = scanner.nextLine();
@@ -84,6 +106,10 @@ public class Shell {
         }
     }
 
+    /**
+     * Check if the user's input is a valid command.
+     * @param command the user's input.
+     */
     private void checkCommand(String command) {
         String[] args = command.split(SPACE_REGEX);
         String[] validCommands = {EXIT_COMMAND, ADD_COMMAND, REMOVE_COMMAND, RES_COMMAND,
@@ -93,29 +119,39 @@ public class Shell {
         }
     }
 
+    /**
+     * Update the filed console to true if the user asked for render the results to the console.
+     * @param command the user's input.
+     */
     private void renderToConsole(String command) {
         if (command.equals(CONSOLE_COMMAND)) {
             console = true;
         }
     }
 
+    /**
+     * Renders the results by using BrightnessImgCharMatcher.chooseChars.
+     * @param command the user's input.
+     */
     private void renderImage(String command) {
         if (command.equals(RENDER_COMMAND)) {
-            BrightnessImgCharMatcher charMatcher = new BrightnessImgCharMatcher(image, FONT);
             Character[] characters =
                     characterDatabase.toArray(new Character[characterDatabase.size()]);
-            var chars = charMatcher.chooseChars(charsInRow, characters);
+//            var chars = charMatcher.chooseChars(charsInRow, characters);
+            var chars = t.chooseChars(charsInRow, characters);
             if (!console) {
-                HtmlAsciiOutput consoleAsciiOutput = new HtmlAsciiOutput(OUTPUT_FILENAME, FONT);
-                consoleAsciiOutput.output(chars);
+                htmlAsciiOutput.output(chars);
             } else {
-                ConsoleAsciiOutput consoleAsciiOutput = new ConsoleAsciiOutput();
                 consoleAsciiOutput.output(chars);
             }
 
         }
     }
 
+    /**
+     * Change the resolution of the output according to the user's command.
+     * @param command the user's input.
+     */
     private void changeResolution(String command) {
         String[] args = command.split(SPACE_REGEX);
         if (args[FIRST_ARG].equals(RES_COMMAND)) {
@@ -129,6 +165,10 @@ public class Shell {
         }
     }
 
+    /**
+     * Multiply/divide the resolution by factor 2.
+     * @param multiply true if the user wants to reader the result to the console.
+     */
     private void ChangeResolutionByFactor2(boolean multiply) {
         if ((!multiply && charsInRow / CHANGE_RESOLUTION_FACTOR >= minCharsInRow) ||
                 (multiply && charsInRow * CHANGE_RESOLUTION_FACTOR <= maxCharsInRow)) {
@@ -143,6 +183,10 @@ public class Shell {
         }
     }
 
+    /**
+     * Remove characters form database.
+     * @param command the user's input.
+     */
     private void removeCharacters(String command) {
         String[] args = command.split(REGEX);
         if (args[FIRST_ARG].equals(REMOVE_COMMAND)) {
@@ -161,6 +205,10 @@ public class Shell {
         }
     }
 
+    /**
+     * remove all characters in a specific range from the database.
+     * @param args the user's input.
+     */
     private void removeCharactersInRange(String[] args) {
         int firstChar = args[SECOND_ARG].charAt(0);
         int secondChar = args[THIRD_ARG].charAt(0);
@@ -171,18 +219,32 @@ public class Shell {
         }
     }
 
+    /**
+     * Remove space character from database.
+     */
     private void removeSpaceCharacter() {
         characterDatabase.remove(SPACE);
     }
 
+    /**
+     * Remove all characters from database.
+     */
     private void removeAllCharacters() {
         characterDatabase.clear();
     }
 
+    /**
+     * remove a single character form database.
+     * @param args the user's input.
+     */
     private void removeSingleCharacter(String[] args) {
         characterDatabase.remove(args[SECOND_ARG].charAt(0));
     }
 
+    /**
+     * add character to database.
+     * @param command the user's input.
+     */
     private void addCharacters(String command) {
         String[] args = command.split(REGEX);
         if (args[FIRST_ARG].equals(ADD_COMMAND)) {
@@ -201,6 +263,10 @@ public class Shell {
         }
     }
 
+    /**
+     * Add all characters in a specific range from the database.
+     * @param commands the user's input.
+     */
     private void addCharactersInRange(String[] commands) {
         int firstChar = commands[SECOND_ARG].charAt(0);
         int secondChar = commands[THIRD_ARG].charAt(0);
@@ -209,24 +275,43 @@ public class Shell {
         addCharactersToDatabase((char) start, (char) end);
     }
 
+    /**
+     * Add all characters from start to end.
+     * @param start character to star from.
+     * @param end character end.
+     */
     private void addCharactersToDatabase(char start, char end) {
         for (char c = start; c <= end; c++) {
             characterDatabase.add(c);
         }
     }
 
+    /**
+     * Add space character.
+     */
     private void addSpaceCharacter() {
         characterDatabase.add(' ');
     }
 
+    /**
+     * Add all characters to database.
+     */
     private void addAllCharacters() {
         addCharactersToDatabase((char) FIRST_ASCII_CHAR, (char) LAST_ASCII_CHAR);
     }
 
+    /**
+     * add a single character to database.
+     * @param commands the user's input.
+     */
     private void addSingleCharacter(String[] commands) {
         characterDatabase.add(commands[SECOND_ARG].charAt(0));
     }
 
+    /**
+     * Prints the database.
+     * @param command the user's input.
+     */
     private void ViewingCharacterDatabase(String command) {
         if (command.equals(CHARS_COMMAND)) {
             System.out.println(Arrays.toString(characterDatabase.toArray()));

@@ -1,10 +1,28 @@
 eli.levinkopf
 205821879
 
-נשנה את האיטרטור ImageIterableProperty כך שיוכל לקבל בקונסטרקטור את הערכים addToX addToY
-כאשר בפונקציה pixels נשלח addToX = addToY = 1.
-הוספתי לממשק Image את המתודה breakToSquareSubImage המחזירה איטרטור על תת התמונות.
-לצורך כך מימשתי מחלקה חדשה בשם BreakImage המממשת את Image ודורסת את השיטות equals, hashCode של Object.
+Iterator implementation:
+I changed the iterable ImageIterableProperty such that it will get the argument addTo that represent the jump
+for the next iteration. In case of Iterable<Image> - iteration on images, this size will be the size of the sub
+image (the sub-images are square). In case of Iterable<Color> - iteration on pixels, this size will be 1.
+I implemented a new class called BreakImage (that implements Image) that represent a sub-image. This class overrides the
+method:
+- getPixel: return the pixels from the start of the image to the end of the image.
+- getWidth: return the width of the image.
+- getHeight: return the height of the image.
+- equals: return true if image, x, y, width and height are equals.
+- hashCode: return the hash code of the image by calculating the hash code with
+Objects.hash(image.hashCode(), x, y, width, height).
 
+Files description:
+- BrightnessImgCharMatcher: this class has a method called chooseChars that get a set of characters and the number of
+  characters per line in the ascii image, calculates the brightness of the characters, splits the image into sub-images
+  and returns the 2-D array of characters that represent the original image.
+- BreakImage: this class represent a sub-image and I already description this class above.
+- Shell: this class has a method called run that manages the all program. Gets input from user and exports the results
+  to the output file (html) or to the console (according to the user's choice).
 
+Design:
+I used in a generic class for the iterator.
+I also created a Facade (Shell) to simplify the interface to the user.
 

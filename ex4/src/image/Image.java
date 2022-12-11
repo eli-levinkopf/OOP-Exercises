@@ -36,6 +36,11 @@ public interface Image {
                 this, this::getPixel, 1, 1);
     }
 
+    /**
+     * Allows iterating the sub-images of the original image by order.
+     * @param sizeOfSubImage the size of sun-image.
+     * @return an Iterable<Image> that can be traversed with a foreach loop.
+     */
     default Iterable<Image> breakToSquareSubImage(int sizeOfSubImage) {
         return new ImageIterableProperty<>(this, (x, y)->new BreakImage(this, x, y, sizeOfSubImage,
                 sizeOfSubImage), sizeOfSubImage, sizeOfSubImage);
