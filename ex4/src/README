@@ -26,3 +26,23 @@ Design:
 I used in a generic class for the iterator.
 I also created a Facade (Shell) to simplify the interface to the user.
 
+Complexity analysis for Dividing images into sub-images algorithm:
+Time complexity:
+Let's denote:
+- size of the image is N x N.
+- numCharsInRow = c.
+=> sizeOfSubImage = (N/c)x(N/c) = (N/c)^2 = m.
+so the number of sub-images (the size of the chooseChars's output) is (N/m)x(N/m). To generate one sub-image
+(to get iterator.next) takes O(1) therefore, the total running time is O((N/m)x(N/m)) = O((N/m)^2)
+= O(N^2/((N/c)^4) = O(c^4/N^2).
+
+Space complexity:
+We divide the original image into sub-images, so the total space needed for that is more NxN space. So the total
+space is O(N^2).
+
+In BrightnessImgCharMatcher class we have a cache that maps sub-images to brightness.
+When the  needs a brightness for a sub-image, it checks if the sub-image is already in the cache. if so, it takes it
+from the cache, else, it calculates the brightness for the sub-image and then adds it to the cache.
+So if the user asks to render an image with some set of characters and after that he adds some characters and asks again
+to render the same image (new with a different set of characters), so we don't needs to calculates the brightness
+for the sub-images because all sub-images are in the cache.

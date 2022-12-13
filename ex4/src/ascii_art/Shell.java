@@ -308,7 +308,10 @@ public class Shell {
      */
     private void ViewingCharacterDatabase(String command) {
         if (command.equals(CHARS_COMMAND)) {
-            System.out.println(Arrays.toString(characterDatabase.toArray()));
+            for (Character c : characterDatabase){
+                System.out.printf("%c ", c);
+            }
+            System.out.println();
         }
     }
 }
