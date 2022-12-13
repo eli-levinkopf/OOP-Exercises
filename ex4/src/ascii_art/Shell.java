@@ -21,7 +21,7 @@ public class Shell {
     public static final String ADD_COMMAND = "add";
     public static final String CHARS_COMMAND = "chars";
     public static final String EXIT_COMMAND = "exit";
-    public static final String GET_INPUT = ">>>";
+    public static final String GET_INPUT = ">>> ";
     public static final String SPACE_REGEX = " ";
     public static final String REGEX = "[ -]+";
     public static final String CHANGE_RESOLUTION_MSG = "Width set to %d\n";
@@ -60,6 +60,7 @@ public class Shell {
 
     /**
      * Creates a new instance of Shell.
+     *
      * @param image image to work with.
      */
     public Shell(Image image) {
@@ -89,13 +90,14 @@ public class Shell {
         System.out.print(GET_INPUT);
         String command = scanner.nextLine();
         while (!command.equals(EXIT_COMMAND)) {
-            checkCommand(command);
-            ViewingCharacterDatabase(command);
-            addCharacters(command);
-            removeCharacters(command);
-            changeResolution(command);
-            renderToConsole(command);
-            renderImage(command);
+            if (checkCommand(command) && !checkEdgeCases(command)) {
+                ViewingCharacterDatabase(command);
+                addCharacters(command);
+                removeCharacters(command);
+                changeResolution(command);
+                renderToConsole(command);
+                renderImage(command);
+            }
             System.out.print(GET_INPUT);
             command = scanner.nextLine();
         }
@@ -103,19 +105,26 @@ public class Shell {
 
     /**
      * Check if the user's input is a valid command.
+     *
      * @param command the user's input.
      */
-    private void checkCommand(String command) {
+    private boolean checkCommand(String command) {
+        if (command.split(REGEX).length == 0) {
+            System.out.println(INCORRECT_COMMAND);
+            return false;
+        }
         String[] args = command.split(SPACE_REGEX);
         String[] validCommands = {EXIT_COMMAND, ADD_COMMAND, REMOVE_COMMAND, RES_COMMAND,
                 CONSOLE_COMMAND, RENDER_COMMAND, CHARS_COMMAND};
         if (!Arrays.asList(validCommands).contains(args[FIRST_ARG])) {
             System.out.println(INCORRECT_COMMAND);
         }
+        return true;
     }
 
     /**
      * Update the filed console to true if the user asked for render the results to the console.
+     *
      * @param command the user's input.
      */
     private void renderToConsole(String command) {
@@ -126,6 +135,7 @@ public class Shell {
 
     /**
      * Renders the results by using BrightnessImgCharMatcher.chooseChars.
+     *
      * @param command the user's input.
      */
     private void renderImage(String command) {
@@ -144,6 +154,7 @@ public class Shell {
 
     /**
      * Change the resolution of the output according to the user's command.
+     *
      * @param command the user's input.
      */
     private void changeResolution(String command) {
@@ -161,11 +172,12 @@ public class Shell {
 
     /**
      * Multiply/divide the resolution by factor 2.
+     *
      * @param multiply true if the user wants to reader the result to the console.
      */
     private void ChangeResolutionByFactor2(boolean multiply) {
-        if ((!multiply && charsInRow / CHANGE_RESOLUTION_FACTOR >= minCharsInRow) ||
-                (multiply && charsInRow * CHANGE_RESOLUTION_FACTOR <= maxCharsInRow)) {
+        if ((!multiply && charsInRow / CHANGE_RESOLUTION_FACTOR >= minCharsInRow)
+                || (multiply && charsInRow * CHANGE_RESOLUTION_FACTOR <= maxCharsInRow)) {
             if (multiply) {
                 charsInRow *= CHANGE_RESOLUTION_FACTOR;
             } else {
@@ -179,6 +191,7 @@ public class Shell {
 
     /**
      * Remove characters form database.
+     *
      * @param command the user's input.
      */
     private void removeCharacters(String command) {
@@ -190,8 +203,8 @@ public class Shell {
                 removeAllCharacters();
             } else if (args.length == ONE_ARG && args[SECOND_ARG].equals(SPACE_COMMAND)) {
                 removeSpaceCharacter();
-            } else if (args.length == TWO_ARGS && args[SECOND_ARG].length() == CHAR_SIZE &&
-                    args[THIRD_ARG].length() == CHAR_SIZE) {
+            } else if (args.length == TWO_ARGS && args[SECOND_ARG].length() == CHAR_SIZE
+                    && args[THIRD_ARG].length() == CHAR_SIZE) {
                 removeCharactersInRange(args);
             } else {
                 System.out.println(REMOVE_INCORRECT_FORMAT);
@@ -201,6 +214,7 @@ public class Shell {
 
     /**
      * remove all characters in a specific range from the database.
+     *
      * @param args the user's input.
      */
     private void removeCharactersInRange(String[] args) {
@@ -229,6 +243,7 @@ public class Shell {
 
     /**
      * remove a single character form database.
+     *
      * @param args the user's input.
      */
     private void removeSingleCharacter(String[] args) {
@@ -237,6 +252,7 @@ public class Shell {
 
     /**
      * add character to database.
+     *
      * @param command the user's input.
      */
     private void addCharacters(String command) {
@@ -248,8 +264,7 @@ public class Shell {
                 addAllCharacters();
             } else if (args.length == ONE_ARG && args[SECOND_ARG].equals(SPACE_COMMAND)) {
                 addSpaceCharacter();
-            } else if (args.length == TWO_ARGS && args[SECOND_ARG].length() == CHAR_SIZE &&
-                    args[THIRD_ARG].length() == CHAR_SIZE) {
+            } else if (args.length == TWO_ARGS && args[SECOND_ARG].length() == CHAR_SIZE && args[THIRD_ARG].length() == CHAR_SIZE) {
                 addCharactersInRange(args);
             } else {
                 System.out.println(ADD_INCORRECT_FORMAT);
@@ -257,8 +272,40 @@ public class Shell {
         }
     }
 
+
+    /**
+     * Add and remove characters in edge cases ("like add ---").
+     * @param command the user's command.
+     * @return true if the command is an edge case, false otherwise.
+     */
+    private boolean checkEdgeCases(String command){
+        // edge case 1.
+        if (command.length() == 7 && command.startsWith("add ") && command.charAt(5) == '-'){
+            addCharactersInRange(new String[]{"add", command.substring(4, 5), command.substring(6, 7)});
+            return true;
+        }
+        // edge case 2.
+        if (command.length() == 10 && command.startsWith("remove") && command.charAt(8) == '-'){
+            removeCharactersInRange(new String[]{"remove", command.substring(7, 8),
+                    command.substring(9, 10)});
+            return true;
+        }
+        // edge case 3.
+        if (command.equals("add ")){
+            addSpaceCharacter();
+            return true;
+        }
+        // edge case 4.
+        if (command.equals("remove ")){
+            removeSpaceCharacter();
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Add all characters in a specific range from the database.
+     *
      * @param commands the user's input.
      */
     private void addCharactersInRange(String[] commands) {
@@ -271,8 +318,9 @@ public class Shell {
 
     /**
      * Add all characters from start to end.
+     *
      * @param start character to star from.
-     * @param end character end.
+     * @param end   character end.
      */
     private void addCharactersToDatabase(char start, char end) {
         for (char c = start; c <= end; c++) {
@@ -296,6 +344,7 @@ public class Shell {
 
     /**
      * add a single character to database.
+     *
      * @param commands the user's input.
      */
     private void addSingleCharacter(String[] commands) {
@@ -304,11 +353,12 @@ public class Shell {
 
     /**
      * Prints the database.
+     *
      * @param command the user's input.
      */
     private void ViewingCharacterDatabase(String command) {
         if (command.equals(CHARS_COMMAND)) {
-            for (Character c : characterDatabase){
+            for (Character c : characterDatabase) {
                 System.out.printf("%c ", c);
             }
             System.out.println();
