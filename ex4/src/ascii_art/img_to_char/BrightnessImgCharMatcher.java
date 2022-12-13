@@ -94,10 +94,6 @@ public class BrightnessImgCharMatcher {
     private void mapBrightnessToAscii(Character[] charSet) {
         brightnessToAsciiMap.clear();
         for (Character character : charSet) {
-            if (BrightnessImgChar(character) == BrightnessImgChar('#')){
-                double c = BrightnessImgChar(character);
-                int x  = 0;
-            }
             brightnessToAsciiMap.put(BrightnessImgChar(character), character);
         }
         linearTransformationForBrightness();
@@ -110,17 +106,14 @@ public class BrightnessImgCharMatcher {
     private double BrightnessImgChar(Character c) {
         boolean[][] booleanMatrix = CharRenderer.getImg(c, NUM_OF_PIXELS_FOR_CHAR, font);
         double count = 0;
-        double s = 0;
         for (boolean[] row : booleanMatrix) {
             for (boolean bool : row) {
-                ++s;
                 if (bool) {
                     ++count;
                 }
             }
         }
-//        return count / Math.pow(NUM_OF_PIXELS_FOR_CHAR, POWER);
-        return  count / s;
+        return count / Math.pow(NUM_OF_PIXELS_FOR_CHAR, POWER);
     }
 
     /**

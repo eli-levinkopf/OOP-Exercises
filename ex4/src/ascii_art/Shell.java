@@ -1,7 +1,6 @@
 package ascii_art;
 
 import ascii_art.img_to_char.BrightnessImgCharMatcher;
-import ascii_art.img_to_char.tmp;
 import ascii_output.ConsoleAsciiOutput;
 import ascii_output.HtmlAsciiOutput;
 import image.Image;
@@ -58,8 +57,6 @@ public class Shell {
     private final HtmlAsciiOutput htmlAsciiOutput;
     private final ConsoleAsciiOutput consoleAsciiOutput;
 
-    private final tmp t;
-
 
     /**
      * Creates a new instance of Shell.
@@ -73,8 +70,6 @@ public class Shell {
         consoleAsciiOutput = new ConsoleAsciiOutput();
         htmlAsciiOutput = new HtmlAsciiOutput(OUTPUT_FILENAME, FONT);
         databaseInitialization();
-
-         t = new tmp(image, FONT);
 
     }
 
@@ -137,8 +132,7 @@ public class Shell {
         if (command.equals(RENDER_COMMAND)) {
             Character[] characters =
                     characterDatabase.toArray(new Character[characterDatabase.size()]);
-//            var chars = charMatcher.chooseChars(charsInRow, characters);
-            var chars = t.chooseChars(charsInRow, characters);
+            var chars = charMatcher.chooseChars(charsInRow, characters);
             if (!console) {
                 htmlAsciiOutput.output(chars);
             } else {
