@@ -45,6 +45,16 @@ public class Shell {
     public static final int ONE_ARG = 2;
     public static final int TWO_ARGS = 3;
     public static final int CHANGE_RESOLUTION_FACTOR = 2;
+    public static final String ADD_AND_SPACE = "add ";
+    public static final String REMOVE_ = "remove ";
+    public static final String REMOVE_AND_SPACE = "remove ";
+    public static final char MINUS_SING = '-';
+    public static final int LENGTH_OF_EDGE_CASE_1 = 7;
+    public static final int LENGTH_OF_EDGE_CASE_2 = 10;
+    public static final int SEP_IDX_IN_EDGE_CASE_1 = 5;
+    public static final int SEP_IDX_IN_EDGE_CASE_2 = 8;
+    public static final int LENGTH_OF_REMOVE_IN_RANGE = 10;
+    public static final int LENGTH_OF_ADD_IN_RANGE = 7;
 
     private boolean console = false;
     private final Scanner scanner = new Scanner(System.in);
@@ -203,7 +213,8 @@ public class Shell {
                 removeAllCharacters();
             } else if (args.length == ONE_ARG && args[SECOND_ARG].equals(SPACE_COMMAND)) {
                 removeSpaceCharacter();
-            } else if (args.length == TWO_ARGS && args[SECOND_ARG].length() == CHAR_SIZE
+            } else if (args.length == TWO_ARGS && command.length() == LENGTH_OF_REMOVE_IN_RANGE
+                    && args[SECOND_ARG].length() == CHAR_SIZE
                     && args[THIRD_ARG].length() == CHAR_SIZE) {
                 removeCharactersInRange(args);
             } else {
@@ -264,7 +275,9 @@ public class Shell {
                 addAllCharacters();
             } else if (args.length == ONE_ARG && args[SECOND_ARG].equals(SPACE_COMMAND)) {
                 addSpaceCharacter();
-            } else if (args.length == TWO_ARGS && args[SECOND_ARG].length() == CHAR_SIZE && args[THIRD_ARG].length() == CHAR_SIZE) {
+            } else if (args.length == TWO_ARGS && command.length() == LENGTH_OF_ADD_IN_RANGE &&
+                    args[SECOND_ARG].length() == CHAR_SIZE &&
+                    args[THIRD_ARG].length() == CHAR_SIZE) {
                 addCharactersInRange(args);
             } else {
                 System.out.println(ADD_INCORRECT_FORMAT);
@@ -279,24 +292,27 @@ public class Shell {
      * @return true if the command is an edge case, false otherwise.
      */
     private boolean checkEdgeCases(String command){
-        // edge case 1.
-        if (command.length() == 7 && command.startsWith("add ") && command.charAt(5) == '-'){
-            addCharactersInRange(new String[]{"add", command.substring(4, 5), command.substring(6, 7)});
+        // edge case 1
+        if (command.length() == LENGTH_OF_EDGE_CASE_1 && command.startsWith(ADD_AND_SPACE) &&
+                command.charAt(SEP_IDX_IN_EDGE_CASE_1) == MINUS_SING){
+            addCharactersInRange(new String[]{ADD_COMMAND, command.substring(4, 5),
+                    command.substring(6, 7)});
             return true;
         }
-        // edge case 2.
-        if (command.length() == 10 && command.startsWith("remove") && command.charAt(8) == '-'){
-            removeCharactersInRange(new String[]{"remove", command.substring(7, 8),
+        // edge case 2
+        if (command.length() == LENGTH_OF_EDGE_CASE_2 && command.startsWith(REMOVE_AND_SPACE) &&
+                command.charAt(SEP_IDX_IN_EDGE_CASE_2) ==MINUS_SING){
+            removeCharactersInRange(new String[]{REMOVE_COMMAND, command.substring(7, 8),
                     command.substring(9, 10)});
             return true;
         }
-        // edge case 3.
-        if (command.equals("add ")){
+        // edge case 3
+        if (command.equals(ADD_AND_SPACE)){
             addSpaceCharacter();
             return true;
         }
-        // edge case 4.
-        if (command.equals("remove ")){
+        // edge case 4
+        if (command.equals(REMOVE_AND_SPACE)){
             removeSpaceCharacter();
             return true;
         }
@@ -332,7 +348,7 @@ public class Shell {
      * Add space character.
      */
     private void addSpaceCharacter() {
-        characterDatabase.add(' ');
+        characterDatabase.add(SPACE);
     }
 
     /**
