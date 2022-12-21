@@ -1,5 +1,7 @@
 package pepse.util;
 
+import pepse.PepseGameManager;
+
 import java.awt.*;
 import java.util.Random;
 
@@ -7,7 +9,7 @@ import java.util.Random;
  * Provides procedurally-generated colors around a pivot.
  * @author Dan Nirel
  */
-public final class ColorSupplier {
+public final class ColorSupplier extends PepseGameManager {
     private static final int DEFAULT_COLOR_DELTA = 10;
     private final static Random random = new Random();
 

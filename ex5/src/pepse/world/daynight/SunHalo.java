@@ -1,4 +1,4 @@
 package pepse.world.daynight;
 
-public class SunHalo {
+public class SunHalo{
 }
