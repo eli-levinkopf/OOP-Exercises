@@ -10,7 +10,7 @@ import java.awt.*;
 
 public class SunHalo {
 
-    public static final int SUN_HALO_DIAMETER = 100;
+    public static final int SUN_HALO_DIAMETER = 200;
     public static final String SUN_HALO_TAG = "sunHalo";
 
     public static GameObject create(GameObjectCollection gameObjects, int layer, GameObject sun, Color color) {

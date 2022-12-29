@@ -1,6 +1,7 @@
 package pepse.world;
 
 import danogl.collisions.GameObjectCollection;
+import danogl.components.CoordinateSpace;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
@@ -12,7 +13,7 @@ public class Terrain {
 
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     public static final double START_HEIGHT_FACTOR = 1.3;
-    public static final int HEIGHT_FACTOR = 29;
+    public static final int HEIGHT_FACTOR = 7;
     public static final String GROUND_TAG = "ground";
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
@@ -26,7 +27,7 @@ public class Terrain {
         noiseGenerator = new NoiseGenerator(seed);
     }
 
-    private float groundHeightAt(float x) {
+    public float groundHeightAt(float x) {
         return (float) (windowDimensions.y() / START_HEIGHT_FACTOR + noiseGenerator.noise(x / Block.SIZE)
                 * Block.SIZE * HEIGHT_FACTOR);
     }
