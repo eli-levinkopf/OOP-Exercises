@@ -30,11 +30,13 @@ public class PepseGameManager extends GameManager {
     public static final int SEED = 2;
     public static final int MIN_X = 0;
     public static final int CYCLE_LENGTH = 30;
+    public static final int SKY_LAYER = Layer.BACKGROUND;
     public static final int SUN_LAYER = Layer.BACKGROUND + 1;
     public static final int SUN_HALO_LAYER = Layer.BACKGROUND + 10;
     public static final int GROUND_LAYER = Layer.STATIC_OBJECTS;
-    public static final int TREE_LAYER = GROUND_LAYER + 1;
-    private ImageReader imageReader;
+    public static final int NIGHT_LAYER = Layer.FOREGROUND;
+    public static final int TREE_LAYER = Layer.STATIC_OBJECTS + 1;
+    public static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     private Terrain terrain;
     private Tree tree;
     private Avatar avatar;
@@ -47,33 +49,36 @@ public class PepseGameManager extends GameManager {
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        this.imageReader = imageReader;
         frameLength = windowController.getWindowDimensions().x();
         endOfWorldFromRight = windowController.getWindowDimensions().x();
         endOfWorldFromLeft = 0;
         // create sky
-        Sky.create(gameObjects(), windowController.getWindowDimensions(), Layer.BACKGROUND);
+        Sky.create(gameObjects(), windowController.getWindowDimensions(), SKY_LAYER);
 
         // create ground
         terrain = new Terrain(gameObjects(), GROUND_LAYER, windowController.getWindowDimensions(), SEED);
         terrain.createInRange(MIN_X, (int) windowController.getWindowDimensions().x());
 
         // create night
-        Night.create(gameObjects(), Layer.FOREGROUND, windowController.getWindowDimensions(), CYCLE_LENGTH);
+        Night.create(gameObjects(), NIGHT_LAYER, windowController.getWindowDimensions(), CYCLE_LENGTH);
 
         // create sun
         GameObject sun = Sun.create(gameObjects(), SUN_LAYER, windowController.getWindowDimensions(), CYCLE_LENGTH);
 
         // create sunHalo
-        SunHalo.create(gameObjects(), SUN_HALO_LAYER, sun, new Color(255, 255, 0, 20));
+        SunHalo.create(gameObjects(), SUN_HALO_LAYER, sun, SUN_HALO_COLOR);
 
         // create trees
         tree = new Tree(gameObjects(), SEED, TREE_LAYER, terrain::groundHeightAt);
         tree.createInRange(MIN_X, (int) windowController.getWindowDimensions().x());
 
         // create avatar
+        createAvatar(imageReader, inputListener, windowController);
+    }
+
+    private void createAvatar(ImageReader imageReader, UserInputListener inputListener, WindowController windowController) {
         Vector2 avatarStartPoint = new Vector2(windowController.getWindowDimensions().x() / 2,
-                terrain.groundHeightAt(windowController.getWindowDimensions().x() / 2) - 50);
+                terrain.groundHeightAt(windowController.getWindowDimensions().x() / 2) - Avatar.AVATAR_SIZE);
         avatar = Avatar.create(gameObjects(), Layer.DEFAULT, avatarStartPoint, inputListener, imageReader);
         gameObjects().layers().shouldLayersCollide(Layer.DEFAULT, GROUND_LAYER, true);
         gameObjects().layers().shouldLayersCollide(Layer.DEFAULT, Tree.trunkLayer, true);
