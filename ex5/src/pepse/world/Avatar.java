@@ -10,6 +10,10 @@ import danogl.util.Vector2;
 
 import java.awt.event.KeyEvent;
 
+/**
+ * The Avatar class represents the player character in the game. It handles user input and
+ * updates the avatar's position and appearance based on the input received.
+ */
 public class Avatar extends GameObject {
 
     public static final String PATH_TO_AVATAR_WALKING1 = "assets/avatar1.png";
@@ -30,16 +34,37 @@ public class Avatar extends GameObject {
     private static Energy energy;
     private int i = INITIALIZE_TO_ZERO;
 
-    public Avatar(Vector2 pos, Renderable renderable, UserInputListener inputListener, GameObjectCollection gameObjects, ImageReader imageReader) {
+
+    /**
+     * Creates a new Avatar object with the given position, renderable, input listener, game objects,
+     * and image reader.
+     *
+     * @param pos           The position of the avatar.
+     * @param renderable    The renderable object to be used to display the avatar.
+     * @param inputListener The input listener to be used to receive user input.
+     * @param gameObjects   The game object collection to which the avatar will be added.
+     * @param imageReader   The image reader to be used to read images for the avatar.
+     */
+    public Avatar(Vector2 pos, Renderable renderable, UserInputListener inputListener, GameObjectCollection gameObjects,
+                  ImageReader imageReader) {
         super(pos, Vector2.ONES.mult(AVATAR_SIZE), renderable);
         this.inputListener = inputListener;
         this.imageReader = imageReader;
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         transform().setAccelerationY(GRAVITY);
-
     }
 
 
+    /**
+     * Creates a new Avatar object and adds it to the given game object collection.
+     *
+     * @param gameObjects   The game object collection to which the avatar will be added.
+     * @param layer         The layer in the game object collection to which the avatar will be added.
+     * @param topLeftCorner The top left corner position of the avatar.
+     * @param inputListener The input listener to be used to receive user input.
+     * @param imageReader   The image reader to be used to read images for the avatar.
+     * @return The newly created Avatar object.
+     */
     public static Avatar create(GameObjectCollection gameObjects, int layer, Vector2 topLeftCorner,
                                 UserInputListener inputListener, ImageReader imageReader) {
         Avatar avatar = new Avatar(topLeftCorner, imageReader.readImage(PATH_TO_AVATAR_WALKING1,
@@ -49,7 +74,12 @@ public class Avatar extends GameObject {
         return avatar;
     }
 
-
+    /**
+     * Overrides the update method of the GameObject class to handle user input and update the
+     * avatar's position and appearance based on the input received.
+     *
+     * @param deltaTime The time in seconds since the last update.
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -78,18 +108,23 @@ public class Avatar extends GameObject {
         if (getVelocity().y() == 0 && energy.getEnergy() < FULL_ENERGY) {
             energy.increaseEnergy();
         }
-        if(getVelocity().y() > 0){
+        if (getVelocity().y() > 0) {
             renderer().setRenderable(imageReader.readImage(PATH_TO_AVATAR_WALKING1, true));
         }
         energy.update();
     }
 
+    /**
+     * Changes the avatar's renderable object based on the current frame count. This is used to
+     * create an animation effect when the avatar is walking.
+     */
     private void walkingRender() {
-        if (i == FIRST_FACTOR_FOR_WALKING_RENDER){
+        if (i == FIRST_FACTOR_FOR_WALKING_RENDER) {
             i = INITIALIZE_TO_ZERO;
             renderer().setRenderable(imageReader.readImage(PATH_TO_AVATAR_WALKING1, true));
-        }else if(i == SECOND_FACTOR_FOR_WALKING_RENDER) {
+        } else if (i == SECOND_FACTOR_FOR_WALKING_RENDER) {
             renderer().setRenderable(imageReader.readImage(PATH_TO_AVATAR_WALKING2, true));
-        }i++;
+        }
+        i++;
     }
 }

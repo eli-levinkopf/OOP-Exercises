@@ -1,0 +1,59 @@
+eli.levinkopf
+test2
+
+Differences between the before and after UML diagrams for this project:
+1. The Energy class was not present in the before UML diagram because it was added as a bonus feature after the initial
+design of the project. This class is responsible for keeping track of the avatar's energy level and allowing the avatar
+to replenish their energy through various means.
+
+2. In the before UML diagram, the Tree class was responsible for creating both the trunk and the leaves of the tree.
+However, in the after UML diagram, the Trunk and Leaf classes were extracted from the Tree class and made into separate
+classes. This means that the Tree class now relies on the Trunk and Leaf classes to create the trunk and leaves, rather
+than doing it itself. The Tree class now uses the create function of the Trunk class to create a trunk, and the create
+function of the Leaf class to create leaves.
+
+3. The addTree and addTreeAtX functions were not present in the before UML diagram because they were not part of the
+initial design of the project. These functions allow the user to add a new tree to the world at a specified location,
+and were added to the after UML diagram to provide more flexibility in tree placement.
+
+4. The walkingRender function was not present in the before UML diagram because it was not part of the initial design
+of the project. This function is responsible for rendering the avatar's figure as it moves across the screen, and was
+added to the after UML diagram to improve the visual aspect of the game.
+
+
+To create an infinite world in my game, I first created a basic world with a sun, earth, and trees. I then added an
+avatar that the player could control to move around the world.
+To make the world infinite, I implemented a system that would add a new frame to the right or left side of the screen
+every time the avatar passed the middle of the screen in either direction. This allowed the avatar to continue moving
+indefinitely in either direction.
+To ensure that the world remained seamless and didn't have any visible gaps, I also implemented a system to remove the
+frame on the opposite side of the screen as the avatar moved. For example, if the avatar moved to the right and passed
+the middle of the screen, a new frame would be added on the right side and the frame on the left side would be removed.
+This kept the world looking continuous and allowed the avatar to move smoothly without encountering any breaks or gaps.
+Overall, I was able to create an infinite world by using a combination of adding and removing frames to the screen and
+continuously updating the position of the avatar as it moved. This allowed the player to explore an endless world and
+provided a unique and immersive gameplay experience.
+
+
+To implement the Tree package in my game, I first created the Tree class. This class is responsible for creating and
+managing the overall tree structure, including both the trunk and the leaves. To do this, the Tree class uses the create
+function of the Trunk class to create a trunk, and creates leaves by creating objects of the Leaf class.
+Next, I created the Trunk class, which is responsible for creating and managing the trunk of the tree. The Trunk class
+has a create function that allows it to create a trunk at a specified position (x) and adds it as an object to the game.
+Finally, I created the Leaf class, which is responsible for creating and managing the leaves of the tree. The Leaf class
+inherits from the GameObject class and creates a leaf that receives various attributes (such as size and color) and a
+random lifetime. The Leaf class then adds the leaf as a game object to the game. A leaf can fall from the tree during
+its lifetime, but after a certain amount of time it will return to its original position on the tree. This is achieved
+through the use of a timer or other tracking mechanism to determine when the leaf should be returned to its
+original position.
+Overall, the Tree package provides a comprehensive system for creating and managing trees in the game, allowing for a
+rich and immersive gameplay experience for the user.
+
+
+As a bonus feature, I added a visual energy bar to the game that is updated according to the amount of energy left for
+the player. The energy bar has 10 levels, and is updated each time the update function is called.
+To implement this feature, I checked the current energy level of the player with each call to the update function. If
+the energy level had passed a certain threshold (such as 25, 50, or 75), I updated the energy bar to reflect this. This
+was achieved through the use of conditional statements and a visual representation of the energy bar.
+Overall, the addition of the visual energy bar provides a useful and visually appealing way for players to track their
+energy levels in the game, and adds an extra layer of gameplay to the experience.

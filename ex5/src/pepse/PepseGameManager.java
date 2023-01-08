@@ -25,6 +25,11 @@ import java.awt.*;
 
 import static pepse.world.trees.Tree.leafLayer;
 
+/**
+ * The PepseGameManager class extends the GameManager class and is responsible for managing the game world
+ * and updating the game state.
+ */
+
 public class PepseGameManager extends GameManager {
 
     public static final int SEED = 2;
@@ -37,6 +42,7 @@ public class PepseGameManager extends GameManager {
     public static final int NIGHT_LAYER = Layer.FOREGROUND;
     public static final int TREE_LAYER = Layer.STATIC_OBJECTS + 1;
     public static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
+    public static final float NEXT_FAME_FACTOR = 1.5f;
     private Terrain terrain;
     private Tree tree;
     private Avatar avatar;
@@ -45,6 +51,14 @@ public class PepseGameManager extends GameManager {
     private float endOfWorldFromLeft;
 
 
+    /**
+     * Initializes the game by creating the sky, ground, night, sun, sun halo, trees, and avatar.
+     *
+     * @param imageReader      the ImageReader to use for reading images
+     * @param soundReader      the SoundReader to use for reading sounds
+     * @param inputListener    the UserInputListener to use for handling user input
+     * @param windowController the WindowController to use for managing the window
+     */
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
@@ -76,19 +90,36 @@ public class PepseGameManager extends GameManager {
         createAvatar(imageReader, inputListener, windowController);
     }
 
-    private void createAvatar(ImageReader imageReader, UserInputListener inputListener, WindowController windowController) {
+    /**
+     * Creates the avatar GameObject and adds it to the game world.
+     */
+    private void createAvatar(ImageReader imageReader, UserInputListener inputListener, WindowController
+            windowController) {
         Vector2 avatarStartPoint = new Vector2(windowController.getWindowDimensions().x() / 2,
                 terrain.groundHeightAt(windowController.getWindowDimensions().x() / 2) - Avatar.AVATAR_SIZE);
         avatar = Avatar.create(gameObjects(), Layer.DEFAULT, avatarStartPoint, inputListener, imageReader);
         gameObjects().layers().shouldLayersCollide(Layer.DEFAULT, GROUND_LAYER, true);
         gameObjects().layers().shouldLayersCollide(Layer.DEFAULT, Tree.trunkLayer, true);
+
+        float avatarLastLocationX = windowController.getWindowDimensions().x() / 2 - 0.5f * Avatar.AVATAR_SIZE;
+        Vector2 avatarLocation = new Vector2(avatarLastLocationX,
+                terrain.groundHeightAt(windowController.getWindowDimensions().x() / 2) - Avatar.AVATAR_SIZE);
         setCamera(new Camera(
                 avatar,
-                windowController.getWindowDimensions().mult(0.5f).subtract(avatarStartPoint).subtract(new Vector2(6, 10)),
+//                windowController.getWindowDimensions().mult(0.5f).add(avatarLocation.mult(-1f)),
+                windowController.getWindowDimensions().mult(0.5f).subtract(avatarStartPoint).subtract(
+                        new Vector2(6, 10)),
                 windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
     }
 
+
+    /**
+     * Updates the game state by updating the terrain, trees, and avatar,
+     * and removing off-screen objects.
+     *
+     * @param deltaTime the deltaTime since the last frame
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -98,39 +129,52 @@ public class PepseGameManager extends GameManager {
             avatar.setVelocity(Vector2.ZERO);
         }
 
-        if (avatar.getCenter().x() + frameLength/2 > endOfWorldFromRight) {
+        if (avatar.getCenter().x() + frameLength / 2 > endOfWorldFromRight) {
             addRightFrame();
 
-        } else if (avatar.getCenter().x() - frameLength/2 < endOfWorldFromLeft) {
+        } else if (avatar.getCenter().x() - frameLength / 2 < endOfWorldFromLeft) {
             addLeftFrame();
         }
     }
 
+    /**
+     * Adds a frame of game objects to the left of the current frame.
+     */
     private void addLeftFrame() {
+        // Add terrain blocks
         terrain.createInRange((int) (endOfWorldFromLeft - frameLength), (int) (endOfWorldFromLeft));
+        // Add trees
         tree.createInRange((int) (endOfWorldFromLeft - frameLength), (int) (endOfWorldFromLeft));
         removeRightFrame();
         endOfWorldFromLeft -= frameLength;
     }
 
+    /**
+     * Removes a frame of game objects from the right of the current frame.
+     */
     private void removeRightFrame() {
         boolean remove = false;
         for (GameObject object : gameObjects()) {
-            if (object.getCenter().x() > avatar.getCenter().x() + frameLength * 1.5) {
-                if (!remove){
+            if (object.getCenter().x() > avatar.getCenter().x() + frameLength * NEXT_FAME_FACTOR) {
+                if (!remove) {
                     remove = true;
                 }
                 removeObjectsFromVisibleWorld(object);
             }
         }
-        if (remove){
-            endOfWorldFromRight = avatar.getCenter().x() + frameLength * 1.5f;
+        if (remove) {
+            endOfWorldFromRight = avatar.getCenter().x() + frameLength * NEXT_FAME_FACTOR;
         }
     }
 
 
+    /**
+     * Adds a frame of game objects to the right of the current frame.
+     */
     private void addRightFrame() {
+        // Add terrain blocks
         terrain.createInRange((int) (endOfWorldFromRight), (int) (endOfWorldFromRight + frameLength));
+        // Add trees
         tree.createInRange((int) (endOfWorldFromRight), (int) (endOfWorldFromRight + frameLength));
         removeLeftFrame();
         endOfWorldFromRight += frameLength;
@@ -138,20 +182,27 @@ public class PepseGameManager extends GameManager {
 
     }
 
+    /**
+     * Removes a frame of game objects from the left of the current frame.
+     */
     private void removeLeftFrame() {
         boolean remove = false;
         for (GameObject object : gameObjects()) {
-            if (object.getCenter().x() < avatar.getCenter().x() - frameLength * 1.5) {
-                if (!remove){
+            if (object.getCenter().x() < avatar.getCenter().x() - frameLength * NEXT_FAME_FACTOR) {
+                if (!remove) {
                     remove = true;
                 }
                 removeObjectsFromVisibleWorld(object);
             }
         }
-        if (remove){
-            endOfWorldFromLeft = avatar.getCenter().x() - frameLength * 1.5f;
+        if (remove) {
+            endOfWorldFromLeft = avatar.getCenter().x() - frameLength * NEXT_FAME_FACTOR;
         }
     }
+
+    /**
+     * Removes game objects that are outside the current frame from the game world.
+     */
     private void removeObjectsFromVisibleWorld(GameObject object) {
         if (object.getTag().equals(Terrain.GROUND_TAG)) {
             gameObjects().removeGameObject(object, GROUND_LAYER);
@@ -162,6 +213,9 @@ public class PepseGameManager extends GameManager {
         }
     }
 
+    /**
+     * The main method that runs the game.
+     */
     public static void main(String[] args) {
         new PepseGameManager().run();
     }

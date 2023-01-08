@@ -5,17 +5,20 @@ import danogl.components.GameObjectPhysics;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
+
+/**
+ * A class representing a block object in the game world. A block is an immovable object that can be rendered.
+ */
 public class Block extends GameObject {
 
     public static final int SIZE = 30;
 
     /**
-     * Construct a new GameObject instance.
+     * Constructs a new Block object with the given top left corner position and renderable.
      *
-     * @param topLeftCorner Position of the object, in window coordinates (pixels).
-     *                      Note that (0,0) is the top-left corner of the window.
-     * @param renderable    The renderable representing the object. Can be null, in which case
-     *                      the GameObject will not be rendered.
+     * @param topLeftCorner the top left corner position of the block in window coordinates (pixels)
+     * @param renderable    the renderable representing the block. Can be null, in which case the block
+     *                      will not be rendered
      */
     public Block(Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, Vector2.ONES.mult(SIZE), renderable);
