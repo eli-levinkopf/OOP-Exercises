@@ -30,7 +30,7 @@ public class MethodDeclaration {
         }
         String[] parametersList = parameters.split("[,\\s]+");
         for (String parameter : parametersList){
-            Variable newVariable = Factory.createVariable(parameter);
+            Variable newVariable = Factory.createVariable(parameter, false); //TODO: implement createVariable
             if (newVariable.isInitialized()){
                 throw new IllegalLineException("ERROR: The initialization of a parameter within the method definition is invalid.");
             }

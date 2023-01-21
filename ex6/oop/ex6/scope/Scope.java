@@ -3,13 +3,17 @@ package oop.ex6.scope;
 
 import oop.ex6.variable.Variable;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Scope {
 
-    private final ArrayList<Variable> variablesList = new ArrayList<>();
+    private final HashMap<String, Variable> nameToVariableHashMap = new HashMap<>();
 
     public void add(Variable variable) {
-        variablesList.add(variable);
+        nameToVariableHashMap.put(variable.getName(), variable);
+    }
+
+    public HashMap<String, Variable> getNameToVariableHashMap() {
+        return nameToVariableHashMap;
     }
 }

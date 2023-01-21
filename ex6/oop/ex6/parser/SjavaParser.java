@@ -1,18 +1,19 @@
 package oop.ex6.parser;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.regex.Pattern;
 
+import oop.ex6.condition.Condition;
 import oop.ex6.method.MethodCall;
 import oop.ex6.method.MethodDeclaration;
 import oop.ex6.scope.Scope;
 import oop.ex6.variable.Factory;
+import oop.ex6.variable.Type;
 import oop.ex6.variable.Variable;
 
 public class SjavaParser {
+    public static final Set<Type> validTypes = EnumSet.of(Type.BOOLEAN, Type.DOUBLE, Type.INT);
 
     public static final String COMMENT_REGEX = "^\\s*//.*";
     public static final String WHITE_SPACE_CHECKER_REGEX = ".*\\s.*";
@@ -68,26 +69,32 @@ public class SjavaParser {
         if (scopesList.size() == 1) { // Line in global scope.
             checkLineValidityInGlobalScope(line); // check code in global scope
         } else if (scopesList.size() > 1) { // Line in method scope.
-            checkMethodScopeValidity(line); // check code in method scope
+            checkLineValidityInMethodScope(line); // check code in method scope
         } else {
             throw new IllegalStateException(SYNTAX_ERROR);
         }
 
     }
 
-    private static void checkMethodScopeValidity(String line) throws IllegalLineException {
+    private static void checkLineValidityInMethodScope(String line) throws IllegalLineException {
         if (line.startsWith(RETURN_PREFIX)) { // Check if line starts with a return statement.
             returnWithOutCloseScope = true;
         } else if (line.matches(METHOD_CALL_REGEX)) { // Check if line starts is a method call.
             methodCallsList.add(new MethodCall(line)); // Create a new method call and add it to the methodCallList.
         } else if (line.matches(IF_WHILE_REGEX)) { // Check if/While statement
-            // TODO: Check ifWhile statement
+            scopesList.add(new Scope()); // Adds condition's scope to the scopes list.
+            Condition.parsConditionLine(line);
         } else if (line.matches(VARIABLE_DECLARATION_REGEX)) { // Check variable declaration
-            // TODO: checkVariableDeclarationValidity()
+            checkLineValidityForVariableDeclaration(line);
         } else { // Check variable assignment
-            // TODO: checkVariableAssignmentValidity()
+            checkVariableAssignmentValidity(line);
         }
     }
+
+    private static void checkVariableAssignmentValidity(String line) {
+        //TODO: implement function
+    }
+
 
     private static void checkLineValidityInGlobalScope(String line) throws IllegalLineException {
         if (!line.matches(WHITE_SPACE_CHECKER_REGEX)) { // If line like "int", throw exception.
@@ -152,4 +159,33 @@ public class SjavaParser {
         }
     }
 
+
+    public static Variable searchVariableInScopes(String parameterName) {
+        return scopesList.stream().map(Scope::getNameToVariableHashMap)
+                .map(map->map.get(parameterName))
+                .filter(Objects::nonNull)
+                .findFirst().orElse(null);
+    }
+
+
+//    public static Variable searchVariableInScopes(String parameterName) {
+//        for (int i = scopesList.size() - 1; i >= 0; i--) {
+//            Variable variable = scopesList.get(i).getNameToVariableHashMap().get(parameterName);
+//            if (variable != null) {
+//                return variable;
+//            }
+//        }
+//        return null;
+//    }
+
+//    public static Variable searchVariableInScopes(String parameterName) {
+//        for (Scope scope : scopesList) {
+//            Variable variable = scope.getNameToVariableHashMap().get(parameterName);
+//            if (variable != null) {
+//                return variable;
+//            }
+//        }
+//        return null;
+//    }
 }
+
