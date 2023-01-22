@@ -36,8 +36,8 @@ public class SjavaParser {
     public static final String UNTERMINATED_GLOBAL_SCOPE = "ERROR: The code must be terminated with a '}' " +
             "in the global scope to indicate the end of the program.";
     private static final HashMap<String, ArrayList<Variable>> methodSignatureToVariablesMap = new HashMap<>();
-    private static final ArrayList<MethodCall> methodCallsList = new ArrayList<>();
-    private static final LinkedList<Scope> scopesList = new LinkedList<>();
+    private static final ArrayList<MethodCall> methodCallsCollection = new ArrayList<>();
+    private static final LinkedList<Scope> scopesCollection = new LinkedList<>();
     private static boolean returnWithOutCloseScope = false;
 
 
@@ -46,12 +46,12 @@ public class SjavaParser {
             File sjavaFile = new File(pathToSjavaFile);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(sjavaFile));
             String line;
-            scopesList.add(new Scope()); // creates a new scope for global scope and adds it to scopes list.
+            scopesCollection.add(new Scope()); // creates a new scope for global scope and adds it to scopes list.
             while ((line = bufferedReader.readLine()) != null) {
                 validateLineSyntax(line);
             }
-            //TODO: validateMethodCalls() //checks validity for all method calls
-            if (scopesList.size() != 1) { // Check if the code ends with a '{' character.
+            validateMethodCalls(); //checks validity for all method calls
+            if (scopesCollection.size() != 1) { // Check if the code ends with a '{' character.
                 throw new IllegalLineException(UNTERMINATED_GLOBAL_SCOPE);
             }
         } catch (IllegalLineException illegalLineException) {
@@ -62,6 +62,19 @@ public class SjavaParser {
 
     }
 
+    private static void validateMethodCalls() throws IllegalLineException {
+        if (methodCallsCollection.isEmpty()) {
+            return; // no method calls found.
+        }
+        for (MethodCall methodCall : methodCallsCollection) {
+            if (!methodSignatureToVariablesMap.containsKey(methodCall.getMethodName())) {
+                throw new IllegalLineException("ERROR: The method '" + methodCall.getMethodName() +
+                        "' is not defined in this scope.");
+            }
+            MethodCall.validateMethodCallParameters(methodSignatureToVariablesMap.get(methodCall.getMethodName()));
+        }
+    }
+
     private static void validateLineSyntax(String line) throws IllegalLineException {
         if (lineIsIgnored(line) || validateScopeClosure(line)) {
             return;
@@ -70,9 +83,9 @@ public class SjavaParser {
             throw new IllegalStateException(CLOSED_AFTER_RETURN_ERROR_MSG);
         }
         line = line.trim(); // remove spaces from the start and end of line.
-        if (scopesList.size() == 1) { // Line in global scope.
+        if (scopesCollection.size() == 1) { // Line in global scope.
             checkLineValidityInGlobalScope(line); // check code in global scope
-        } else if (scopesList.size() > 1) { // Line in method scope.
+        } else if (scopesCollection.size() > 1) { // Line in method scope.
             checkLineValidityInMethodScope(line); // check code in method scope
         } else {
             throw new IllegalStateException(SYNTAX_ERROR);
@@ -84,9 +97,9 @@ public class SjavaParser {
         if (line.startsWith(RETURN_PREFIX)) { // Check if line starts with a return statement.
             returnWithOutCloseScope = true;
         } else if (line.matches(METHOD_CALL_REGEX)) { // Check if line starts is a method call.
-            methodCallsList.add(new MethodCall(line)); // Create a new method call and add it to the methodCallList.
+            methodCallsCollection.add(new MethodCall(line)); // Create a new method call and add it to the methodCallList.
         } else if (line.matches(IF_WHILE_REGEX)) { // Check if/While statement
-            scopesList.add(new Scope()); // Adds condition's scope to the scopes list.
+            scopesCollection.add(new Scope()); // Adds condition's scope to the scopes list.
             Condition.parsConditionLine(line);
         } else if (line.matches(VARIABLE_DECLARATION_REGEX)) { // Check variable declaration
             checkLineValidityForVariableDeclaration(line);
@@ -136,7 +149,7 @@ public class SjavaParser {
                 throw new IllegalLineException("ERROR: Cannot declare a final variable without initializing it " +
                         "(variable name: " + variable.getName() + ").");
             }
-            scopesList.getLast().add(variable); // Add the variable to the current scope.
+            scopesCollection.getLast().add(variable); // Add the variable to the current scope.
         }
     }
 
@@ -147,18 +160,18 @@ public class SjavaParser {
             throw new IllegalLineException("ERROR: A method with the same name already exists.");
         }
         methodSignatureToVariablesMap.put(methodDeclaration.getName(), methodDeclaration.getMethodParametersList());
-        scopesList.add(new Scope()); // Open a new scope.
+        scopesCollection.add(new Scope()); // Open a new scope.
         for (Variable variable : methodDeclaration.getMethodParametersList()) { // Add all variables to the scope.
-            scopesList.getLast().add(variable);
+            scopesCollection.getLast().add(variable);
         }
     }
 
     private static boolean validateScopeClosure(String line) throws IllegalStateException {
         if (Pattern.matches("\\s*}\\s*", line)) {
-            if (scopesList.size() <= 1) {
+            if (scopesCollection.size() <= 1) {
                 throw new IllegalStateException(INVALID_SCOPES_SYNTAX);
             }
-            scopesList.removeLast(); // Closings the least scope.
+            scopesCollection.removeLast(); // Closings the least scope.
             returnWithOutCloseScope = false;
             return true;
         }
@@ -178,7 +191,7 @@ public class SjavaParser {
 
 
     public static Variable searchVariableInScopes(String parameterName) {
-        return scopesList.stream().map(Scope::getNameToVariableHashMap)
+        return scopesCollection.stream().map(Scope::getNameToVariableHashMap)
                 .map(map -> map.get(parameterName))
                 .filter(Objects::nonNull)
                 .findFirst().orElse(null);
