@@ -29,12 +29,12 @@ public class SjavaParser {
     public static final String COMMENT_PREFIX = "//";
     public static final String ILLEGAL_COMMENT_LINE_ERROR_MSG = "Illegal comment line." +
             " Comment line most to start with '//'.";
-
     public static final String CLOSED_AFTER_RETURN_ERROR_MSG = "Error: Scope not closed after return statement." +
             " All scopes must be closed after a return statement";
     public static final String INVALID_SCOPES_SYNTAX = "ERROR: Invalid scope closing syntax";
     public static final String SYNTAX_ERROR = "ERROR: Syntax error";
-
+    public static final String UNTERMINATED_GLOBAL_SCOPE = "ERROR: The code must be terminated with a '}' " +
+            "in the global scope to indicate the end of the program.";
     private static final HashMap<String, ArrayList<Variable>> methodSignatureToVariablesMap = new HashMap<>();
     private static final ArrayList<MethodCall> methodCallsList = new ArrayList<>();
     private static final LinkedList<Scope> scopesList = new LinkedList<>();
@@ -49,6 +49,10 @@ public class SjavaParser {
             scopesList.add(new Scope()); // creates a new scope for global scope and adds it to scopes list.
             while ((line = bufferedReader.readLine()) != null) {
                 validateLineSyntax(line);
+            }
+            //TODO: validateMethodCalls() //checks validity for all method calls
+            if (scopesList.size() != 1) { // Check if the code ends with a '{' character.
+                throw new IllegalLineException(UNTERMINATED_GLOBAL_SCOPE);
             }
         } catch (IllegalLineException illegalLineException) {
             throw new IllegalStateException(illegalLineException.getMessage());
@@ -91,8 +95,20 @@ public class SjavaParser {
         }
     }
 
-    private static void checkVariableAssignmentValidity(String line) {
-        //TODO: implement function
+    private static void checkVariableAssignmentValidity(String line) throws IllegalLineException {
+        if (!line.endsWith(";")) { //TODO: remove this check?
+            throw new IllegalLineException("ERROR: ");
+        }
+        String[] parts = line.split("=");
+        String variableName = parts[0].trim();
+        String value = parts[1].trim();
+        Variable variable = SjavaParser.searchVariableInScopes(variableName);
+        if (variable == null || variable.isFinal()) {
+            throw new IllegalLineException("ERROR: The variable '" + variableName + "' is either not defined" +
+                    " or is a final variable, therefore it cannot be reassigned.");
+        }
+        variable.checkValueType(value); // Check if value type is machine to declared variable type.
+        variable.setInitialized(true);
     }
 
 
@@ -117,7 +133,8 @@ public class SjavaParser {
         }
         for (Variable variable : newVariableList) {
             if (variable.isFinal() && !variable.isInitialized()) {
-                throw new IllegalLineException("ERROR: Cannot declare a final variable without initializing it.");
+                throw new IllegalLineException("ERROR: Cannot declare a final variable without initializing it " +
+                        "(variable name: " + variable.getName() + ").");
             }
             scopesList.getLast().add(variable); // Add the variable to the current scope.
         }
@@ -162,7 +179,7 @@ public class SjavaParser {
 
     public static Variable searchVariableInScopes(String parameterName) {
         return scopesList.stream().map(Scope::getNameToVariableHashMap)
-                .map(map->map.get(parameterName))
+                .map(map -> map.get(parameterName))
                 .filter(Objects::nonNull)
                 .findFirst().orElse(null);
     }
