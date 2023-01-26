@@ -28,9 +28,9 @@ public class MethodDeclaration {
         if (parameters.matches("^\\s*$")) { // If there is no parameters.
             return;
         }
-        String[] parametersList = parameters.split("[,\\s]+");
+        String[] parametersList = parameters.split(",");
         for (String parameter : parametersList){
-            Variable newVariable = Factory.createVariable(parameter, false); //TODO: implement createVariable
+            Variable newVariable = Factory.createVariable(parameter.trim(), false); //TODO: implement createVariable
             if (newVariable.isInitialized()){
                 throw new IllegalLineException("ERROR: The initialization of a parameter within the method definition is invalid.");
             }
