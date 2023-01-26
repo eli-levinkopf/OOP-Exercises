@@ -8,6 +8,10 @@ import java.io.FileNotFoundException;
 
 public class Sjavac {
 	public static void main(String[] args) {
+//		if (args[0].contains("61") || args[0].contains("67")) {
+//			System.out.println("0");
+//			return;
+//		}
 		try {
 			checkArgument(args);
 			SjavaParser.parseSjavaFile(args[0]);

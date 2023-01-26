@@ -55,7 +55,7 @@ public class SjavaParser {
                 throw new IllegalLineException(UNTERMINATED_GLOBAL_SCOPE);
             }
         } catch (IllegalLineException illegalLineException) {
-            throw new IllegalStateException(illegalLineException.getMessage());
+            throw new IllegalLineException(illegalLineException.getMessage());
         } catch (IOException ioException) {
             throw new FileNotFoundException(FILE_NOT_FOUND_ERROR_MSG);
         }
@@ -80,7 +80,7 @@ public class SjavaParser {
             return;
         }
         if (returnWithOutCloseScope) {
-            throw new IllegalStateException(CLOSED_AFTER_RETURN_ERROR_MSG);
+            throw new IllegalLineException(CLOSED_AFTER_RETURN_ERROR_MSG);
         }
         line = line.trim(); // remove spaces from the start and end of line.
         if (scopesCollection.size() == 1) { // Line in global scope.
@@ -88,7 +88,7 @@ public class SjavaParser {
         } else if (scopesCollection.size() > 1) { // Line in method scope.
             checkLineValidityInMethodScope(line); // check code in method scope
         } else {
-            throw new IllegalStateException(SYNTAX_ERROR);
+            throw new IllegalLineException(SYNTAX_ERROR);
         }
 
     }
@@ -166,10 +166,10 @@ public class SjavaParser {
         }
     }
 
-    private static boolean validateScopeClosure(String line) throws IllegalStateException {
+    private static boolean validateScopeClosure(String line) throws IllegalLineException{
         if (Pattern.matches("\\s*}\\s*", line)) {
             if (scopesCollection.size() <= 1) {
-                throw new IllegalStateException(INVALID_SCOPES_SYNTAX);
+                throw new IllegalLineException(INVALID_SCOPES_SYNTAX);
             }
             scopesCollection.removeLast(); // Closings the least scope.
             returnWithOutCloseScope = false;
