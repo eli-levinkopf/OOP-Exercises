@@ -1,6 +1,7 @@
 package oop.ex6.variable;
 
 import oop.ex6.parser.IllegalLineException;
+import oop.ex6.parser.SjavaParser;
 
 public class Variable {
     private boolean isInitialized = false;
@@ -41,7 +42,7 @@ public class Variable {
 
     public void checkValueType(String value) throws IllegalLineException {
         Type type = Type.getType(value);
-        if (type == this.type ) {
+        if (type == this.type || SjavaParser.searchVariableInScopes(value).getType() == this.type) {
             return;
         }
         if (type == null || (this.type == Type.BOOLEAN && type != Type.DOUBLE && type != Type.INT)) {
