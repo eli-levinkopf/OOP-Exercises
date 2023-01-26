@@ -13,7 +13,7 @@ public class MethodCall {
 
     public static final String METHOD_NAME_REGEX = "([a-zA-Z][a-zA-Z0-9_]*)\\s*";
     private final String methodName;
-    private static final List<String> methodCallParameters = new ArrayList<>();
+    private final List<String> methodCallParameters;
 
     public MethodCall(String line) throws IllegalLineException {
         methodName= line.split("\\(")[0].trim();
@@ -21,12 +21,13 @@ public class MethodCall {
             throw new IllegalLineException("ERROR: Invalid method call: '" + methodName + "'.\nThe method name must start with a letter" +
                     " and can only contain letters, numbers, and underscores.");
         }
+        methodCallParameters = new ArrayList<>();
         Arrays.stream(line.substring(line.indexOf("(") + 1, line.lastIndexOf(")")).split(",", -1))
                 .map(String::trim)
                 .forEach(methodCallParameters::add);
     }
 
-    public static void validateMethodCallParameters(ArrayList<Variable> methodDeclarationParameters) throws IllegalLineException{
+    public void validateMethodCallParameters(ArrayList<Variable> methodDeclarationParameters) throws IllegalLineException{
         if (methodCallParameters.size() != methodDeclarationParameters.size()){
             throw new IllegalLineException("ERROR: Number of parameters passed in method call does not match the " +
                     "number of parameters in method declaration." +  " Expected "

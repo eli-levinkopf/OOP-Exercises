@@ -71,7 +71,7 @@ public class SjavaParser {
                 throw new IllegalLineException("ERROR: The method '" + methodCall.getMethodName() +
                         "' is not defined in this scope.");
             }
-            MethodCall.validateMethodCallParameters(methodSignatureToVariablesMap.get(methodCall.getMethodName()));
+            methodCall.validateMethodCallParameters(methodSignatureToVariablesMap.get(methodCall.getMethodName()));
         }
     }
 
