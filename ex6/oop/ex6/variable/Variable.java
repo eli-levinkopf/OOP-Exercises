@@ -40,15 +40,19 @@ public class Variable {
     }
 
 
-    public void checkValueType(String value) throws IllegalLineException {
-        Type type = Type.getType(value);
-        if (type == this.type || SjavaParser.searchVariableInScopes(value).getType() == this.type) {
+    public void
+    checkValueType(String value) throws IllegalLineException {
+        Type type = Type.getType(value.replace(";", ""));
+        Variable variable = SjavaParser.searchVariableInScopes(value);
+        if (type == this.type || (variable != null
+                && variable.getType() == this.type && variable.isInitialized())) {
             return;
         }
         if (type == null || (this.type == Type.BOOLEAN && type != Type.DOUBLE && type != Type.INT)) {
             throw new IllegalLineException("Incompatible types, expected " + this.type + " but got " + type + ".");
         }
-        else if(this.type != Type.BOOLEAN && this.type != Type.DOUBLE && type != Type.INT) {
+        else if((this.type != Type.BOOLEAN && this.type != Type.DOUBLE && type != Type.INT) || this.type == Type.STRING
+        || type == Type.STRING || this.type == Type.CHAR || type == Type.CHAR) {
             throw new IllegalLineException("Incompatible types, expected " + this.type + " but got " + type + ".");
         }
     }

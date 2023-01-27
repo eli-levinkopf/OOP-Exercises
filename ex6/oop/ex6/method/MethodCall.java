@@ -22,9 +22,14 @@ public class MethodCall {
                     " and can only contain letters, numbers, and underscores.");
         }
         methodCallParameters = new ArrayList<>();
+//        Arrays.stream(line.substring(line.indexOf("(") + 1, line.lastIndexOf(")")).split(",", -1))
+//                .map(String::trim)
+//                .forEach(methodCallParameters::add);
         Arrays.stream(line.substring(line.indexOf("(") + 1, line.lastIndexOf(")")).split(",", -1))
                 .map(String::trim)
+                .filter(parameter -> !parameter.isEmpty())
                 .forEach(methodCallParameters::add);
+
     }
 
     public void validateMethodCallParameters(ArrayList<Variable> methodDeclarationParameters) throws IllegalLineException{
@@ -33,19 +38,19 @@ public class MethodCall {
                     "number of parameters in method declaration." +  " Expected "
                     + methodDeclarationParameters.size() + " but got " + methodCallParameters.size() + ".");
         }
-        IntStream.range(0, methodDeclarationParameters.size())
-                .forEach(i -> {
-                    try {
-                        methodDeclarationParameters.get(i).checkValueType(methodCallParameters.get(i));
-                    } catch (IllegalLineException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-//        Iterator<Variable> variableIterator = methodDeclarationParameters.iterator();
-//        Iterator<String> stringIterator = methodCallParameters.iterator();
-//        while (variableIterator.hasNext() && stringIterator.hasNext()){
-//            variableIterator.next().checkValueType((stringIterator.next()));
-//        }
+//        IntStream.range(0, methodDeclarationParameters.size())
+//                .forEach(i -> {
+//                    try {
+//                        methodDeclarationParameters.get(i).checkValueType(methodCallParameters.get(i));
+//                    } catch (IllegalLineException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                });
+        Iterator<Variable> variableIterator = methodDeclarationParameters.iterator();
+        Iterator<String> stringIterator = methodCallParameters.iterator();
+        while (variableIterator.hasNext() && stringIterator.hasNext()){
+            variableIterator.next().checkValueType((stringIterator.next()));
+        }
     }
 
     public String getMethodName() {

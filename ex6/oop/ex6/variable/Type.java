@@ -19,9 +19,11 @@ public enum Type {
     }
 
     public static Type getType(String parameter) {
+//        parameter = parameter.replace("\"", "").trim();
         if (parameter.matches("'.'")) {
             return Type.CHAR;
-        } else if (parameter.matches("\"[^\"]*\"")) {
+//        } else if (parameter.matches("\"[^\"]*\"")) {//"\"(.*)\""
+        } else if (parameter.matches("\"\\s*(.*)\"\\s*")) {
             return Type.STRING;
         } else if (parameter.matches("^[+-]?[0-9]+$")) {
             return Type.INT;
@@ -44,3 +46,9 @@ public enum Type {
     }
 }
 
+class c {
+    public static void main(String[] args) {
+        String a = "\"Hello \"" ;
+        Type.getType(a);
+    }
+}

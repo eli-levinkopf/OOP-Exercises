@@ -9,12 +9,15 @@ import java.util.ArrayList;
 
 public class Condition {
 
-    private static final ArrayList<String> conditionParametersList = new ArrayList<>();
-    public static void parsConditionLine(String line) throws IllegalLineException {
+    private final ArrayList<String> conditionParametersList = new ArrayList<>();
+    public void parsConditionLine(String line) throws IllegalLineException {
         if (!line.matches("^\\s*(while|if)\\s*\\(\\s*.*\\s*\\)\\s*\\{\\s*")) {
             throw new IllegalArgumentException("ERROR: The syntax of the condition line is incorrect.");
         }
         String conditionStatement = line.substring(line.indexOf("(") + 1, line.lastIndexOf(")"));
+        if (conditionStatement.isBlank()){
+            throw new IllegalLineException("ERROR: Illegal empty condition statement '" +line+ "'.");
+        }
         String[] params = conditionStatement.split("&&|\\|\\|");
         for(String param: params){
             conditionParametersList.add(param.trim().replace(" ",""));
@@ -22,7 +25,7 @@ public class Condition {
         checkConditionParametersValidity();
     }
 
-    private static void checkConditionParametersValidity() throws IllegalLineException {
+    private void checkConditionParametersValidity() throws IllegalLineException {
         for (String parameter : conditionParametersList){
             Type type = Type.getType(parameter);
             if (type == null){
