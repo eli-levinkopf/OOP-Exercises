@@ -1,56 +1,81 @@
 package oop.ex6.method;
 
+import oop.ex6.errorMessage.ErrorMessage;
 import oop.ex6.parser.IllegalLineException;
+import oop.ex6.regex.Regex;
 import oop.ex6.variable.Variable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.IntStream;
 
+/**
+ * This class represents a method call in the S-Java code. It contains the name of the method,
+ * the parameters given to the method, and the scope index at which the method is called.
+ *
+ * @author Eli Levinkopf
+ */
 public class MethodCall {
+    public static final String OPEN_PARENTHESES = "(";
+    public static final String CLOSE_PARENTHESES = ")";
 
-    public static final String METHOD_NAME_REGEX = "([a-zA-Z][a-zA-Z0-9_]*)\\s*";
     private final String methodName;
     private final List<String> methodCallParameters;
+    private int scopeIndex;
 
+    /**
+     * Creates a new MethodCall object from a line of S-Java code.
+     *
+     * @param line the line of S-Java code representing the method call
+     * @throws IllegalLineException if the method name is invalid or if the number of parameters given to the method
+     *                              does not match the number of parameters in the method declaration
+     */
     public MethodCall(String line) throws IllegalLineException {
-        methodName= line.split("\\(")[0].trim();
-        if (!methodName.matches(METHOD_NAME_REGEX)){
-            throw new IllegalLineException("ERROR: Invalid method call: '" + methodName + "'.\nThe method name must start with a letter" +
-                    " and can only contain letters, numbers, and underscores.");
+        methodName = line.split(Regex.METHOD_SPLIT_REGEX)[0].trim();
+        if (!methodName.matches(Regex.METHOD_NAME_REGEX)) {
+            throw new IllegalLineException(String.format(ErrorMessage.INVALID_METHOD_NAME_ERROR, methodName));
         }
         methodCallParameters = new ArrayList<>();
-//        Arrays.stream(line.substring(line.indexOf("(") + 1, line.lastIndexOf(")")).split(",", -1))
-//                .map(String::trim)
-//                .forEach(methodCallParameters::add);
-        Arrays.stream(line.substring(line.indexOf("(") + 1, line.lastIndexOf(")")).split(",", -1))
+        Arrays.stream(line.substring(line.indexOf(OPEN_PARENTHESES) + 1, line.lastIndexOf(CLOSE_PARENTHESES))
+                        .split(Regex.COMMA_REGEX, -1))
                 .map(String::trim)
                 .filter(parameter -> !parameter.isEmpty())
                 .forEach(methodCallParameters::add);
 
     }
 
-    public void validateMethodCallParameters(ArrayList<Variable> methodDeclarationParameters) throws IllegalLineException{
-        if (methodCallParameters.size() != methodDeclarationParameters.size()){
-            throw new IllegalLineException("ERROR: Number of parameters passed in method call does not match the " +
-                    "number of parameters in method declaration." +  " Expected "
-                    + methodDeclarationParameters.size() + " but got " + methodCallParameters.size() + ".");
+    /**
+     * Validates the parameters given to the method call against the parameters in the method declaration.
+     *
+     * @param methodDeclarationParameters the parameters in the method declaration
+     * @throws IllegalLineException if the number of parameters in the method call does not match the number of
+     *                              parameters in the method declaration or if the type of a parameter in the method
+     *                              call does not match the type of the corresponding parameter in the method
+     *                              declaration
+     */
+    public void validateMethodCallParameters(ArrayList<Variable> methodDeclarationParameters) throws IllegalLineException {
+        if (methodCallParameters.size() != methodDeclarationParameters.size()) {
+            throw new IllegalLineException(String.format(ErrorMessage.INVALID_PARAMETER_NUMBER_ERROR,
+                    methodDeclarationParameters.size(), methodCallParameters.size()));
         }
-//        IntStream.range(0, methodDeclarationParameters.size())
-//                .forEach(i -> {
-//                    try {
-//                        methodDeclarationParameters.get(i).checkValueType(methodCallParameters.get(i));
-//                    } catch (IllegalLineException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                });
         Iterator<Variable> variableIterator = methodDeclarationParameters.iterator();
         Iterator<String> stringIterator = methodCallParameters.iterator();
-        while (variableIterator.hasNext() && stringIterator.hasNext()){
-            variableIterator.next().checkValueType((stringIterator.next()));
+        while (variableIterator.hasNext() && stringIterator.hasNext()) {
+            variableIterator.next().checkValueType(stringIterator.next(), scopeIndex);
         }
+    }
+
+    public int getScopeIndex() {
+        return scopeIndex;
+    }
+
+    public List<String> getMethodCallParameters() {
+        return methodCallParameters;
+    }
+
+    public void setScopeIndex(int scopeIndex) {
+        this.scopeIndex = scopeIndex;
     }
 
     public String getMethodName() {

@@ -1,8 +1,18 @@
 package oop.ex6.main;
 
-public class IllegalUsageException extends Exception{
+import oop.ex6.errorMessage.ErrorMessage;
 
+/**
+ * This class represents the exception thrown when the program is used in an illegal way.
+ *
+ * @author Eli Levinkopf
+ */
+public class IllegalUsageException extends Exception {
+
+    /**
+     * This constructor creates a new instance of the IllegalUsageException class.
+     */
     public IllegalUsageException() {
-        super("error: Illegal usage");
+        super(ErrorMessage.ILLEGAL_USAGE_ERROR);
     }
 }
