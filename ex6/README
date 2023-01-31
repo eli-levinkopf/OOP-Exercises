@@ -1,1 +1,186 @@
 eli.levinkopf
+test2
+
+========================================================================================================================
+
+Files description:
+
+1. oop.ex6.condition.Condition.java - The class 'Condition' represents a condition line in the S-Java language. It
+includes methods for parsing and validating a condition line. The class includes the ability to check the validity of
+condition parameters, throw an exception if any of the parameters are invalid, and check if the parameter is
+a valid type (int, double, boolean).
+
+2. oop.ex6.errorMessage.ErrorMessages - The 'ErrorMessage' class is a class containing error messages as string
+constants.These messages are used to inform the user of syntax errors and other issues in the code.
+
+3. oop.ex6.main.IllegalUsageException - The 'IllegalUsageException' class is an exception thrown when the program is
+used in an illegal way. It contains a constructor to create a new instance of the exception with the error
+message "Illegal usage error."
+
+4. oop.ex6.main.Sjavac - The 'Sjavac' class is the main class of the program and is responsible for running the program
+and handling exceptions that occur during execution. The main method accepts a single command line argument which is
+the path to the s-java file. The method calls the parseSjavaFile method from the SjavaParser class to parse the file and
+throws exceptions if there are any errors in the file. The method outputs the error code as well to indicate if the
+program ran successfully or not. The checkArgument method is used to validate the command line arguments, and throws an
+IllegalUsageException if the arguments are not valid.
+
+4. oop.ex6.method.MethodCall - This class represents a method call in the S-Java code. It contains information about
+the method name, its parameters, and the scope index at which it is called. The class contains methods for validating
+the method call parameters against the method declaration parameters, and for retrieving the method name,
+its parameters, and the scope index.
+
+5. oop.ex6.method.MethodDeclaration - The 'MethodDeclaration' class is a representation of a method declaration in the
+s-Java code. It has a constructor that accepts a line of code representing a method declaration and extracts the
+method's name and parameters. The class has a private method to parse the method declaration line, validate its syntax
+and extract the method name and parameters. The class has getters for the method parameters list and method name.
+
+6. oop.ex6.parser.IllegalLineException - The 'IllegalLineException' class represents an exception that is thrown when an
+illegal line is encountered during parsing. The exception provides a specific error message indicating the issue with
+the line.
+
+7. oop.ex6.parser.SjavaParser - The 'SjavaParser' class is a parser for the Sjava programming language. It has a
+parseSjavaFile method that reads a Sjava file and validates each line for syntax, checking if it's in the global scope
+or method scope. The class also has several instance variables such as methodSignatureToVariablesMap,
+methodCallsCollection, and scopesCollection. It also has a setDataStructures method to set or clear the data structures.
+The method calls are also checked for validity, and if any method call is not defined, an error is thrown.
+
+8. oop.ex6.regex.Regex - The 'Regex' class is a collection of commonly used regular expressions for parsing and
+validating input in Java. It provides a range of static final fields that represent regular expressions for various
+types of input such as variable assignments, type and name of variables, method calls, and condition statements.
+These fields can be used in various parsing and validation operations.
+
+9. oop.ex6.scope.Scope - The 'Scope' class represents a scope in a Sjava program and contains a collection of variables
+and their associated names stored in a HashMap. The class has methods for adding variables to the scope and accessing
+the HashMap.
+
+10. oop.ex6.variable.Type - The 'Type' enum class defines 5 data types (INT, DOUBLE, STRING, CHAR, BOOLEAN) that can be
+used in the program and provides methods to convert a string representation of the type to the corresponding Type
+instance. The getType method uses regular expressions to match the input string to the appropriate Type. The
+stringToType method uses a mapping stored in typeMap to return the corresponding Type for a given string. If the string
+is not found in the map, an exception is thrown.
+
+11. oop.ex6.variable.Variable - The 'Variable' class represents a variable declaration in S-Java. It contains
+information such as the variable's name, type, whether it's final or not, the scope index and initialization state.
+It has methods to set/get these properties, and also has a method to check the compatibility between a value and
+the variable type.
+
+12. oop.ex6.variable.VariableGenerator - The 'VariableGenerator' class is a Java class responsible for creating
+variables and variable lists. It provides methods to parse input strings and create Variable objects based on the input,
+which can be either a variable declaration, or a variable declaration and assignment. It includes methods to parse a
+string with or without an assignment, and to create a list of variables from a given line. The input must match the
+expected syntax for variable declaration or assignment as defined in the Regex class. If the input does not match, an
+IllegalLineException will be thrown.
+
+========================================================================================================================
+
+Answers:
+
+6.1 - Error Handling: I chose to handle s-Java code errors by utilizing the exception mechanism, as it provides a
+systematic way to deal with errors that might occur during the execution of a program. This mechanism allows me to
+easily propagate errors up the call stack, which makes it easier to trace the source of the error and fix it.
+Additionally, using exceptions helps to cleanly separate the error handling code from the rest of the code, making
+the code more maintainable and easier to understand. By using exceptions, I can ensure that the error handling code does
+not interfere with the normal flow of the program, and that it can be easily modified or extended without affecting
+other parts of the code. This makes the error handling more modular and reusable, allowing me to write more robust
+and reliable code.
+
+6.2 - To add support for new types of variables in the code, such as float, the first step would be to modify the 'type'
+enum to include the new type. This would ensure that the program recognizes and supports the new data type
+
+6.3 - The two main regular expressions used in my code are:
+
+      VARIABLE_DEFINITION_REGEX = "(?:final\\s+)?(?:int|double|String|char|boolean)\\s+[a-zA-Z_]\\w*(?:\\s*=\\s*[^,]+?)"
+                                  + "?(?:\\s*,\\s*[a-zA-Z_]\\w*(?:\\s*=\\s*[^,]+?)?)*;|\\w+\\s*=\\s*.+?;"
+      This regular expression is used to match and extract variable declarations in the code. It looks for keywords like
+      "final", the data type (int, double, String, char, or boolean), the variable name, and any assigned value.
+      The expression allows for multiple variables to be declared and assigned values in a single line,
+      separated by commas.
+
+      TYPE_AND_NAME_REGEX = "([a-zA-Z]+)\\s+((?:_[a-zA-Z]+[a-zA-Z0-9_]*)|(?:[a-zA-Z]+[a-zA-Z0-9_]*))"
+      This regular expression is used to match and extract the data type and name of a variable. It matches the type,
+      which must start with a lowercase or uppercase letter, followed by one or more whitespace characters and the
+      variable name, which can either start with an underscore or a letter and must contain only alphanumeric
+      characters and underscores.
+
+========================================================================================================================
+
+Tests:
+
+test01:
+This test declares 3 variables of type int and assigns values to them. The variable c is assigned the ASCII value of the
+character '3' which is invalid in s-Java.
+
+test02:
+This test declares a function foo that returns nothing (void). The function returns without a value, which is invalid
+in s-Java.
+
+test03:
+This test declares a function foo that returns an int. This is invalid in s-Java, functions must be declared with a
+return type void.
+
+test04:
+This test declares 3 variables of type int and assigns values to them. The variable b is declared but not assigned a
+value. The variable c is assigned to b (uninitialized variable) which is invalid in s-Java.
+
+test05:
+This test declares a function foo that tries to assign a boolean value to a string variable, which is invalid in s-Java.
+The type of the variable must match the type of the assigned value.
+
+test06:
+This test declares a function foo that contains an if statement that declares a local string variable s. The function
+doesn't have a closing curly brace to end the function, causing a syntax error in the code which is invalid in s-Java.
+
+test07:
+This test declares a function foo that calls another function foo1, but foo1 is not defined or declared in the code
+which is invalid in s-Java.
+
+test08:
+This test contains two functions foo and bar. The function bar calls foo and tries to pass an integer argument to it,
+but foo doesn't accept any arguments, leading to an error in the code.
+
+test09:
+This test declares two functions foo and bar. foo takes an integer and a string as arguments, but bar calls foo with
+only one argument which is invalid in s-Java.
+
+test10:
+This test declares two functions foo and bar. foo takes an integer and a string as arguments, but bar calls foo with an
+integer and a double argument which is invalid in s-Java.
+
+test11:
+This test declares three integer variables a, b, and c and assigns values to them. This checks if integer values can be
+assigned and stored properly in the code.
+
+test12:
+This test declares a function foo that 'do something'. This checks if the function foo can be declared well.
+
+test13:
+This test declares an integer global variable i and a function foo. The function foo sets the value of hte global
+variable i to 3 and returns.
+
+test14:
+This test declares three integer variables a, b, and c and assigns values to them. The value of b is assigned to c,
+checking if values can be assigned from one variable to another.
+
+test15:
+This test declares a function foo that declares a string variable s and assigns a string value to it.
+This checks if string values can be assigned and stored properly in the code.
+
+test16:
+This test declares a function foo that contains an if statement that declares a local string variable s.
+The function checks if the the 'if' statement works properly.
+
+test17:
+This test declares two functions foo and foo1. The function foo calls foo1 and foo1 contains a return statement.
+This checks if a function can call another function and if the return statement is functional.
+
+test18:
+This test declares a single function foo that calls itself, creating a recursive call. This checks if recursion is
+functional in the code.
+
+test19:
+This test declares two functions foo and bar. The function bar calls foo and passes an integer and a string argument
+to it. This checks if a function can accept arguments and if arguments can be passed to a function properly.
+
+test20:
+This test declares two functions foo and bar. foo takes an integer and a string as arguments and bar calls foo with the
+correct arguments but is missing a semicolon at the end of the function call, causing a syntax error.

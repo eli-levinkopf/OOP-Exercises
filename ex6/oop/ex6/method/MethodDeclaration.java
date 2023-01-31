@@ -3,7 +3,7 @@ package oop.ex6.method;
 import oop.ex6.errorMessage.ErrorMessage;
 import oop.ex6.parser.IllegalLineException;
 import oop.ex6.regex.Regex;
-import oop.ex6.variable.Factory;
+import oop.ex6.variable.VariableGenerator;
 import oop.ex6.variable.Variable;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class MethodDeclaration {
         }
         String[] parametersList = parameters.split(Regex.COMMA_REGEX);
         for (String parameter : parametersList){
-            Variable newVariable = Factory.createVariable(parameter.trim(), false);
+            Variable newVariable = VariableGenerator.createVariable(parameter.trim(), false);
             if (newVariable.isInitialized()){
                 throw new IllegalLineException(ErrorMessage.INVALID_PARAMETER_INITIALIZATION_IN_METHOD_DEFINITION);
             }

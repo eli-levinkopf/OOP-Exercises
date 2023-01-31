@@ -11,7 +11,7 @@ import oop.ex6.method.MethodCall;
 import oop.ex6.method.MethodDeclaration;
 import oop.ex6.regex.Regex;
 import oop.ex6.scope.Scope;
-import oop.ex6.variable.Factory;
+import oop.ex6.variable.VariableGenerator;
 import oop.ex6.variable.Type;
 import oop.ex6.variable.Variable;
 
@@ -31,6 +31,8 @@ import oop.ex6.variable.Variable;
  * @author Eli Levinkopf
  */
 public class SjavaParser {
+    private static final Pattern VARIABLE_DECLARATION_PATTERN =
+            Pattern.compile(Regex.VARIABLE_DECLARATION_PARSER_REGEX);
 
     /* A set that contains the valid types that are supported in the Sjava language. */
     public static final Set<Type> validTypes = EnumSet.of(Type.BOOLEAN, Type.DOUBLE, Type.INT);
@@ -263,12 +265,11 @@ public class SjavaParser {
      *                              or the value type of the declared variable does not match the type specified in the line.
      */
     private static void checkLineValidityForVariableDeclaration(String line) throws IllegalLineException {
-        ArrayList<Variable> newVariableList = Factory.createVariableList(line); // Line can contain more than one variable declaration
+        ArrayList<Variable> newVariableList = VariableGenerator.createVariableList(line); // Line can contain more than one variable declaration
         if (newVariableList.size() == 0) {
             throw new IllegalLineException(String.format(ErrorMessage.VARIABLE_DECLARATION_SYNTAX_ERROR, line));
         }
-        Pattern pattern = Pattern.compile(Regex.VARIABLE_DECLARATION_PARSER_REGEX);
-        Matcher matcher = pattern.matcher(line);
+        Matcher matcher = VARIABLE_DECLARATION_PATTERN.matcher(line);
         while (matcher.find()) {
             newVariableList.get(0).checkValueType(matcher.group(), -1);
         }
@@ -312,6 +313,8 @@ public class SjavaParser {
             scopesCollection.getLast().add(variable);// Add all variables to the scope.
         }
     }
+
+
 
     /**
      * Verifies if the name of a {@link Variable} is already defined in the same scope.

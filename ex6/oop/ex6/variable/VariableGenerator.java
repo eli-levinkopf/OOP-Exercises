@@ -10,12 +10,12 @@ import java.util.regex.Pattern;
 
 
 /**
- * The Factory class is responsible for creating variables and variable lists.
+ * The VariableGenerator class is responsible for creating variables and variable lists.
  * It provides methods to parse variable definition strings and create variable objects based on the input.
  *
  * @author Eli Levinkopf
  */
-public class Factory {
+public class VariableGenerator {
     private static final Pattern pattern = Pattern.compile(Regex.VARIABLE_DEFINITION_REGEX);
     public static final String SPACE = " ";
 
@@ -93,7 +93,8 @@ public class Factory {
         boolean isFinal = line.startsWith(Regex.FINAL_PREFIX);
         String[] parts = line.split(Regex.WHITESPACE_REGEX);
         String type = parts[isFinal ? 1 : 0];
-        String variables = line.substring(line.indexOf(type) + type.length()).trim().replaceAll(Regex.SEMICOLON_PREFIX, Regex.EMPTY_STRING);
+        String variables = line.substring(line.indexOf(type) +
+                type.length()).trim().replaceAll(Regex.SEMICOLON_PREFIX, Regex.EMPTY_STRING);
         String[] variablesStrList = variables.split(Regex.COMMA_REGEX);
         ArrayList<Variable> variablesList = new ArrayList<>();
         for (String str : variablesStrList) {

@@ -13,6 +13,11 @@ import java.io.FileNotFoundException;
  */
 public class Sjavac {
 
+    public static final int FIRST_ARGUMENT = 0;
+    public static final int LEGAL_CODE = 0;
+    public static final int ILLEGAL_CODE = 1;
+    public static final int USAGE_ERROR = 2;
+
     /**
      * The main method of the program, responsible for parsing the s-java file and handling any exceptions that may occur.
      *
@@ -21,14 +26,14 @@ public class Sjavac {
     public static void main(String[] args) {
         try {
             checkArgument(args);
-            SjavaParser.parseSjavaFile(args[0]);
-            System.out.println(0);
+            SjavaParser.parseSjavaFile(args[FIRST_ARGUMENT]);
+            System.out.println(LEGAL_CODE);
         } catch (IllegalLineException illegalLineException) {
             System.err.println(illegalLineException.getMessage());
-            System.out.println(1);
+            System.out.println(ILLEGAL_CODE);
         } catch (FileNotFoundException | IllegalUsageException err) {
             System.err.println(err.getMessage());
-            System.out.println(2);
+            System.out.println(USAGE_ERROR);
         }
     }
 
